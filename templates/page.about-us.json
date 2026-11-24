@@ -1,0 +1,127 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "background_color": "{{ settings.color_palette.background }}",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    },
+    "bytefied_page_content_8UBgA7": {
+      "type": "bytefied-page-content",
+      "blocks": {
+        "text_bLLBdR": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Walk into a department store and a bottle you love can easily cost more than your weekly groceries. That always felt wrong to us. So we set out to build a shop where you can find the <strong>designer and niche fragrances</strong> people actually talk about, from houses like Creed, Parfums de Marly, Maison Francis Kurkdjian, Initio, Tom Ford and Xerjoff, at prices that make sense.</p><p>We buy at wholesale and keep our margins honest. There are no fancy counters, no celebrity campaigns and no markups hiding behind a pretty box. What you save goes straight back into your collection.</p>"
+          }
+        },
+        "stats_nEMUQc": {
+          "type": "stats",
+          "settings": {
+            "value_1": "4.8",
+            "label_1": "Average rating from our customers",
+            "value_2": "2 days",
+            "label_2": "Most orders leave within two business days",
+            "value_3": "$125",
+            "label_3": "Free shipping once you reach it"
+          }
+        },
+        "heading_TWNYat": {
+          "type": "heading",
+          "settings": {
+            "heading": "Try it before you commit",
+            "subheading": "The part of our shop people love the most"
+          }
+        },
+        "text_Q6wqqh": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Buying a full bottle based on a paper strip or a video review is a gamble. A scent changes on your skin through the day, and what smells amazing in the first minute can turn into something you never want to wear again by the afternoon.</p><p>That is why we offer <strong>samples starting at $6.99</strong>. Each one is filled straight from a genuine bottle, so what you test is exactly what you would buy. Wear it to work, wear it on a night out, see what people say. When one feels like it was made for you, come back for the full bottle with total confidence.</p>"
+          }
+        },
+        "points_bitwLw": {
+          "type": "points",
+          "settings": {
+            "title_1": "Full bottles and samples",
+            "text_1": "Shop the full size of your favourites or explore a few new ones in sample size first.",
+            "title_2": "Designer and niche in one place",
+            "text_2": "From everyday crowd pleasers to rare niche releases, all under one roof.",
+            "title_3": "Packed with care",
+            "text_3": "Every order is wrapped securely so it arrives looking exactly like it left us.",
+            "title_4": "Real people behind the shop",
+            "text_4": "Questions about a scent or an order get answered by someone who actually knows perfume."
+          }
+        },
+        "callout_efqHRT": {
+          "type": "callout",
+          "settings": {
+            "text": "<p>Our goal is simple. Help you find the scent people remember you by, without overpaying and without the guesswork.</p>",
+            "byline": "The Sams Fragrance Shop team",
+            "style": "dark"
+          }
+        },
+        "text_mCNWeX": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Hundreds of customers have already left us reviews, and we read every single one. People tell us about fast delivery, careful packaging and the little extra samples we like to slip into orders. We would rather earn your trust one order at a time than ask for it upfront.</p><p>Thank you for being here. We cannot wait to help you find your next signature scent.</p>"
+          }
+        },
+        "buttons_YTMU3t": {
+          "type": "buttons",
+          "settings": {
+            "label_1": "Shop Samples",
+            "link_1": "shopify://collections/decants",
+            "label_2": "Read Reviews",
+            "link_2": "shopify://pages/review"
+          }
+        }
+      },
+      "block_order": [
+        "text_bLLBdR",
+        "stats_nEMUQc",
+        "heading_TWNYat",
+        "text_Q6wqqh",
+        "points_bitwLw",
+        "callout_efqHRT",
+        "text_mCNWeX",
+        "buttons_YTMU3t"
+      ],
+      "name": "Page Content About Us",
+      "settings": {
+        "eyebrow": "About us",
+        "title": "Real fragrance, fair prices, and no guessing",
+        "lead": "<p>We started Sams Fragrance Shop for one simple reason. Great perfume should not feel out of reach, and you should never have to wonder if the bottle in your hands is the real thing.</p>",
+        "title_size": 52,
+        "head_image": "shopify://shop_images/ChatGPT_Image_Sep_20_2026_05_25_50_PM.png",
+        "head_image_ratio": "21-9",
+        "head_image_caption": "",
+        "style_variant": "verified",
+        "color_scheme": "white",
+        "alignment": "center",
+        "content_width": 1200,
+        "text_size": 17,
+        "block_gap": 36,
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    }
+  },
+  "order": [
+    "main",
+    "bytefied_page_content_8UBgA7"
+  ]
+}

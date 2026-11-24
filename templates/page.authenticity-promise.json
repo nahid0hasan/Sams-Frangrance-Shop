@@ -1,0 +1,122 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "background_color": "{{ settings.color_palette.background }}",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    },
+    "bytefied_page_content_JFXwh4": {
+      "type": "bytefied-page-content",
+      "blocks": {
+        "text_T4dTBP": {
+          "type": "text",
+          "settings": {
+            "text": "<p>The fragrance world has a real problem with fakes. Some look almost perfect on the outside, but the scent fades in an hour and can even irritate your skin. We know how frustrating it is to spend good money and end up with a copy, which is exactly why we are so strict about where our stock comes from.</p><p>Everything we sell is sourced from <strong>established, verified distributors</strong> in the fragrance industry. We do not buy from random resellers, we do not chase suspiciously cheap deals and we never cut corners to hit a lower price.</p>"
+          }
+        },
+        "heading_qTnKaR": {
+          "type": "heading",
+          "settings": {
+            "heading": "How we keep it genuine",
+            "subheading": "What happens before a bottle ever reaches you"
+          }
+        },
+        "points_FWeyTq": {
+          "type": "points",
+          "settings": {
+            "title_1": "Trusted sources only",
+            "text_1": "Our stock comes from reputable distributors we have worked with and checked over time.",
+            "title_2": "Batch codes checked",
+            "text_2": "We verify batch codes so the bottle matches what the brand actually produced.",
+            "title_3": "Samples from real bottles",
+            "text_3": "Every sample is filled from a genuine bottle, so testing is never a compromise.",
+            "title_4": "Inspected before shipping",
+            "text_4": "Each order is looked over and packed by hand before it goes out the door."
+          }
+        },
+        "callout_VyLJBR": {
+          "type": "callout",
+          "settings": {
+            "text": "<p>If it is on our shelves, it is authentic. That is our promise, and we stand behind it on every single order.</p>",
+            "byline": "Sams Fragrance Shop",
+            "style": "dark"
+          }
+        },
+        "heading_iCb8fb": {
+          "type": "heading",
+          "settings": {
+            "heading": "Why our prices are lower",
+            "subheading": ""
+          }
+        },
+        "text_NEk4Df": {
+          "type": "text",
+          "settings": {
+            "text": "<p>A lower price can make people nervous, and that is fair. The answer is simple. We buy at wholesale and run a lean shop online, so we skip the rent, staff and advertising costs that push retail prices up. The juice inside the bottle is the same one you would find at a luxury counter. You are just not paying for the counter.</p>"
+          }
+        },
+        "text_QdPKWp": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Still unsure? Do not just take our word for it. Hundreds of real customers have shared their experience, and many of them mention checking their bottles themselves. Have a look at what they have to say, and if you ever have a question about a specific product, reach out and we will happily walk you through it.</p>"
+          }
+        },
+        "buttons_8gj4iR": {
+          "type": "buttons",
+          "settings": {
+            "label_1": "Read Reviews",
+            "link_1": "shopify://pages/review",
+            "label_2": "Contact Us",
+            "link_2": "shopify://pages/contact"
+          }
+        }
+      },
+      "block_order": [
+        "text_T4dTBP",
+        "heading_qTnKaR",
+        "points_FWeyTq",
+        "callout_VyLJBR",
+        "heading_iCb8fb",
+        "text_NEk4Df",
+        "text_QdPKWp",
+        "buttons_8gj4iR"
+      ],
+      "name": "Page Content Authenticity",
+      "settings": {
+        "eyebrow": "Authenticity promise",
+        "title": "Every bottle is the real thing",
+        "lead": "<p>For us authenticity is not a marketing line. It is the one rule we never bend, on every order, every sample and every bottle that leaves our shop.</p>",
+        "title_size": 52,
+        "head_image_ratio": "16-9",
+        "head_image_caption": "",
+        "style_variant": "editorial",
+        "color_scheme": "white",
+        "alignment": "center",
+        "content_width": 1200,
+        "text_size": 17,
+        "block_gap": 36,
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    }
+  },
+  "order": [
+    "main",
+    "bytefied_page_content_JFXwh4"
+  ]
+}

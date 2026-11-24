@@ -1,0 +1,950 @@
+{%- liquid
+  assign coll = collections[section.settings.collection]
+  assign limit = section.settings.products_to_show
+
+  assign mobile_cards = 1.6
+  if section.settings.mobile_columns == 'one'
+    assign mobile_cards = 1.15
+  elsif section.settings.mobile_columns == 'two'
+    assign mobile_cards = 2.2
+  endif
+-%}
+
+{% style %}
+  #ScentProduct-{{ section.id }} {
+    --sp-black: #1c1a17;
+    --sp-white: #ffffff;
+    --sp-grey: #f5f5f4;
+    --sp-border: #e5e5e3;
+    --sp-muted: #6b6b68;
+    --sp-font: 'Geist', 'Geist Sans', 'GeistVF', -apple-system, system-ui, sans-serif;
+
+    {% if section.settings.color_scheme == 'white' %}
+      --sp-bg: #ffffff;
+      --sp-card: #f5f5f4;
+    {% else %}
+      --sp-bg: #f5f5f4;
+      --sp-card: #ffffff;
+    {% endif %}
+
+    --sp-gap: {{ section.settings.column_gap }}px;
+    --sp-cards: {{ section.settings.columns_desktop }};
+
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--sp-bg);
+    color: var(--sp-black);
+    font-family: var(--sp-font);
+
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  #ScentProduct-{{ section.id }},
+  #ScentProduct-{{ section.id }} * {
+    font-family: var(--sp-font) !important;
+  }
+
+  #ScentProduct-{{ section.id }} .container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* Head */
+  #ScentProduct-{{ section.id }} .sp__head {
+    margin: 0 0 {{ section.settings.title_gap }}px;
+    text-align: {{ section.settings.title_alignment }};
+  }
+
+  #ScentProduct-{{ section.id }} .sp__title {
+    margin: 0;
+    font-size: clamp(1.5rem, 3vw, {{ section.settings.title_size | divided_by: 16.0 }}rem);
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: var(--sp-black);
+  }
+
+  #ScentProduct-{{ section.id }} .sp__subtitle {
+    margin: 12px 0 0;
+    font-size: clamp(1rem, 1.4vw, 1.125rem);
+    line-height: 1.5;
+    color: var(--sp-muted);
+  }
+
+  #ScentProduct-{{ section.id }} .sp__subtitle p {
+    margin: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  /* Track */
+  #ScentProduct-{{ section.id }} .sp__viewport {
+    position: relative;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__track {
+    display: flex;
+    gap: var(--sp-gap);
+    margin: 0;
+    padding: 4px 0 8px;
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__item {
+    flex: 0 0 calc((100% - (var(--sp-cards) * var(--sp-gap))) / (var(--sp-cards) + 0.28));
+    scroll-snap-align: start;
+  }
+
+  {% if section.settings.layout == 'grid' %}
+    #ScentProduct-{{ section.id }} .sp__track {
+      display: grid;
+      grid-template-columns: repeat({{ section.settings.columns_desktop }}, minmax(0, 1fr));
+      row-gap: 44px;
+      overflow: visible;
+    }
+
+    #ScentProduct-{{ section.id }} .sp__item {
+      flex: none;
+    }
+  {% endif %}
+
+  /* Card */
+  #ScentProduct-{{ section.id }} .sp__card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__media {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: #fafafb !important;
+    border: 1px solid var(--sp-border);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__card:hover .sp__media {
+    border-color: #d8d8d5;
+    box-shadow: 0 14px 30px rgba(28, 26, 23, 0.1);
+    transform: translateY(-4px);
+  }
+
+  #ScentProduct-{{ section.id }} .sp__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 16px;
+    box-sizing: border-box;
+    transition: opacity 0.4s ease, transform 0.55s ease;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__card:hover .sp__img--main {
+    transform: scale(1.04);
+  }
+
+  #ScentProduct-{{ section.id }} .sp__img--alt {
+    opacity: 0;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__card:hover .sp__img--alt {
+    opacity: 1;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    padding: 6px 10px;
+    border-radius: 2px;
+    background-color: var(--sp-black);
+    color: var(--sp-white);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__badge--soldout {
+    background-color: var(--sp-white);
+    color: var(--sp-black);
+    border: 1px solid var(--sp-border);
+  }
+
+  /* Info */
+  #ScentProduct-{{ section.id }} .sp__info {
+    padding: 18px 2px 0;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__vendor {
+    margin: 0 0 6px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--sp-black);
+  }
+
+  #ScentProduct-{{ section.id }} .sp__name {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: black !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__card:hover .sp__name {
+    color: var(--sp-black);
+  }
+
+  #ScentProduct-{{ section.id }} .sp__price {
+    margin: 10px 0 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--sp-black);
+  }
+
+  #ScentProduct-{{ section.id }} .sp__price del {
+    margin-left: 8px;
+    font-weight: 400;
+    color: var(--sp-muted);
+    text-decoration: line-through;
+  }
+
+  /* Rating */
+  #ScentProduct-{{ section.id }} .sp__rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__stars {
+    position: relative;
+    display: inline-block;
+    line-height: 0;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__stars-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    line-height: 0;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__stars svg {
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__stars-bg svg {
+    fill: var(--sp-border);
+  }
+
+  #ScentProduct-{{ section.id }} .sp__stars-fill svg {
+    fill: #EFBF04 !important;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__reviews {
+    font-size: 13px;
+    line-height: 1.3;
+    color: var(--sp-muted);
+  }
+
+  /* Arrows */
+  #ScentProduct-{{ section.id }} .sp__arrow {
+    position: absolute;
+    top: var(--sp-arrow-top, 50%);
+    transform: translateY(-50%);
+    z-index: 3;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--sp-border);
+    background-color: var(--sp-white);
+    color: var(--sp-black);
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.28s ease, color 0.28s ease, opacity 0.28s ease;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__arrow svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__arrow:hover {
+    background-color: var(--sp-black);
+    color: var(--sp-white);
+    border-color: var(--sp-black);
+  }
+
+  #ScentProduct-{{ section.id }} .sp__arrow:disabled {
+    opacity: 0.3;
+    cursor: default;
+    background-color: var(--sp-white);
+    color: var(--sp-black);
+    border-color: var(--sp-border);
+  }
+
+  #ScentProduct-{{ section.id }} .sp__arrow--prev {
+    left: -22px;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__arrow--next {
+    right: -22px;
+  }
+
+  /* Mobile scroll indicator */
+  #ScentProduct-{{ section.id }} .sp__progress {
+    display: none;
+  }
+
+  #ScentProduct-{{ section.id }} .sp__empty {
+    padding: 40px 0;
+    text-align: center;
+    color: var(--sp-muted);
+    font-size: 15px;
+  }
+
+  /* Animation feel */
+  #ScentProduct-{{ section.id }} .sp__reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s cubic-bezier(0.22, 0.61, 0.36, 1),
+                transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  #ScentProduct-{{ section.id }}.is-visible .sp__reveal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #ScentProduct-{{ section.id }}.is-visible .sp__item:nth-child(1) .sp__reveal { transition-delay: 0.04s; }
+  #ScentProduct-{{ section.id }}.is-visible .sp__item:nth-child(2) .sp__reveal { transition-delay: 0.1s; }
+  #ScentProduct-{{ section.id }}.is-visible .sp__item:nth-child(3) .sp__reveal { transition-delay: 0.16s; }
+  #ScentProduct-{{ section.id }}.is-visible .sp__item:nth-child(4) .sp__reveal { transition-delay: 0.22s; }
+  #ScentProduct-{{ section.id }}.is-visible .sp__item:nth-child(5) .sp__reveal { transition-delay: 0.28s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #ScentProduct-{{ section.id }} .sp__reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    #ScentProduct-{{ section.id }} .sp__track {
+      scroll-behavior: auto;
+    }
+  }
+
+  /* Tablet */
+  @media screen and (max-width: 1289px) {
+    #ScentProduct-{{ section.id }} .sp__arrow--prev { left: 4px; }
+    #ScentProduct-{{ section.id }} .sp__arrow--next { right: 4px; }
+  }
+
+  @media screen and (max-width: 989px) {
+    #ScentProduct-{{ section.id }} {
+      --sp-cards: {{ section.settings.columns_tablet }};
+    }
+
+    {% if section.settings.layout == 'grid' %}
+      #ScentProduct-{{ section.id }} .sp__track {
+        grid-template-columns: repeat({{ section.settings.columns_tablet }}, minmax(0, 1fr));
+      }
+    {% endif %}
+
+    #ScentProduct-{{ section.id }} .sp__arrow {
+      display: none;
+    }
+  }
+
+  /* Mobile */
+  @media screen and (max-width: 749px) {
+    #ScentProduct-{{ section.id }} {
+      --sp-cards: {{ mobile_cards }};
+      --sp-gap: 14px;
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px;
+    }
+
+    {% if section.settings.layout == 'grid' %}
+      #ScentProduct-{{ section.id }} .sp__track {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        row-gap: 30px;
+      }
+    {% endif %}
+
+    #ScentProduct-{{ section.id }} .sp__media img {
+      padding: 10px;
+    }
+
+    #ScentProduct-{{ section.id }} .sp__info {
+      padding-top: 14px;
+    }
+
+    #ScentProduct-{{ section.id }} .sp__name {
+      font-size: 14px;
+    }
+
+    #ScentProduct-{{ section.id }} .sp__price {
+      font-size: 15px;
+    }
+
+    {% if section.settings.layout == 'carousel' %}
+      #ScentProduct-{{ section.id }} .sp__progress {
+        display: block;
+        position: relative;
+        width: 100%;
+        height: 4px;
+        margin: 18px 0 0;
+        border-radius: 999px;
+        background-color: var(--sp-border);
+        overflow: hidden;
+      }
+
+      #ScentProduct-{{ section.id }} .sp__progress-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 30%;
+        border-radius: inherit;
+        background-color: var(--sp-black);
+        transform: translateX(0);
+        will-change: transform;
+      }
+    {% endif %}
+  }
+{% endstyle %}
+
+<section
+  id="ScentProduct-{{ section.id }}"
+  class="scent-product"
+  {% if section.settings.title != blank %}
+    aria-label="{{ section.settings.title | strip_html | escape }}"
+  {% endif %}
+>
+  <div class="container">
+    {%- if section.settings.title != blank or section.settings.subtitle != blank -%}
+      <div class="sp__head sp__reveal">
+        {%- if section.settings.title != blank -%}
+          <h2 class="sp__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subtitle != blank -%}
+          <div class="sp__subtitle">{{ section.settings.subtitle }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if coll != blank and coll.products.size > 0 -%}
+      <div class="sp__viewport">
+        {%- if section.settings.layout == 'carousel' and section.settings.show_arrows -%}
+          <button
+            type="button"
+            class="sp__arrow sp__arrow--prev"
+            data-sp-prev
+            aria-label="Show previous products"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M14.5 5.5L8 12l6.5 6.5"/>
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="sp__arrow sp__arrow--next"
+            data-sp-next
+            aria-label="Show next products"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M9.5 5.5L16 12l-6.5 6.5"/>
+            </svg>
+          </button>
+        {%- endif -%}
+
+        <ul class="sp__track" data-sp-track role="list">
+          {%- for product in coll.products limit: limit -%}
+            {%- liquid
+              assign alt_image = product.images[1]
+
+              assign rating_value = 0
+              assign rating_scale = 5
+              assign rating_count = 0
+
+              if product.metafields.reviews.rating != blank
+                assign rating_value = product.metafields.reviews.rating.value.rating | times: 1.0
+                assign rating_scale = product.metafields.reviews.rating.value.scale_max | times: 1.0
+              endif
+
+              if product.metafields.reviews.rating_count != blank
+                assign rating_count = product.metafields.reviews.rating_count.value | times: 1
+              endif
+
+              assign star_pct = 0
+              if rating_scale > 0
+                assign star_pct = rating_value | divided_by: rating_scale | times: 100
+              endif
+            -%}
+
+            <li class="sp__item">
+              <a class="sp__card sp__reveal" href="{{ product.url }}">
+                <div class="sp__media">
+                  {%- if product.available == false -%}
+                    <span class="sp__badge sp__badge--soldout">Sold Out</span>
+                  {%- elsif product.compare_at_price > product.price -%}
+                    <span class="sp__badge">Sale</span>
+                  {%- endif -%}
+
+                  {%- if product.featured_image != blank -%}
+                    {{
+                      product.featured_image
+                      | image_url: width: 800
+                      | image_tag:
+                        loading: 'lazy',
+                        sizes: '(max-width: 749px) 60vw, 300px',
+                        widths: '200, 300, 400, 600, 800',
+                        class: 'sp__img sp__img--main',
+                        alt: product.featured_image.alt
+                      | default: product.title
+                      | escape
+                    }}
+                    {%- if section.settings.hover_second_image and alt_image != blank -%}
+                      {{
+                        alt_image
+                        | image_url: width: 800
+                        | image_tag:
+                          loading: 'lazy',
+                          sizes: '(max-width: 749px) 60vw, 300px',
+                          widths: '200, 300, 400, 600, 800',
+                          class: 'sp__img sp__img--alt',
+                          alt: ''
+                      }}
+                    {%- endif -%}
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag: 'sp__img sp__img--main' }}
+                  {%- endif -%}
+                </div>
+
+                <div class="sp__info">
+                  {%- if section.settings.show_vendor -%}
+                    {%- capture brand -%}{%- render 'product-brand', product: product -%}{%- endcapture -%}
+                    {%- if brand != blank -%}
+                      <p class="sp__vendor">{{ brand }}</p>
+                    {%- endif -%}
+                  {%- endif -%}
+
+                  <p class="sp__name">{{ product.title }}</p>
+
+                  {%- if section.settings.show_price -%}
+                    <p class="sp__price">
+                      {%- if product.price_varies -%}
+                        {{ product.price_min | money }} to {{ product.price_max | money }}
+                      {%- else -%}
+                        {{ product.price | money }}
+                        {%- if product.compare_at_price > product.price -%}
+                          <del>{{ product.compare_at_price | money }}</del>
+                        {%- endif -%}
+                      {%- endif -%}
+                    </p>
+                  {%- endif -%}
+
+                  {%- if section.settings.show_rating and rating_count > 0 -%}
+                    <div class="sp__rating">
+                      <span
+                        class="sp__stars"
+                        role="img"
+                        aria-label="Rated {{ rating_value }} out of {{ rating_scale }}"
+                      >
+                        <span class="sp__stars-bg" aria-hidden="true">
+                          {%- for i in (1..5) -%}
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                              <path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4 6.2 20.5l1.1-6.5L2.6 9.4l6.5-.9L12 2.6z"/>
+                            </svg>
+                          {%- endfor -%}
+                        </span>
+                        <span class="sp__stars-fill" style="width: {{ star_pct }}%;" aria-hidden="true">
+                          {%- for i in (1..5) -%}
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                              <path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4 6.2 20.5l1.1-6.5L2.6 9.4l6.5-.9L12 2.6z"/>
+                            </svg>
+                          {%- endfor -%}
+                        </span>
+                      </span>
+                      <span class="sp__reviews">
+                        {{ rating_count }}
+                        {% if rating_count == 1 %}review{% else %}reviews{% endif %}
+                      </span>
+                    </div>
+                  {%- endif -%}
+                </div>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- if section.settings.layout == 'carousel' -%}
+          <div class="sp__progress" data-sp-progress aria-hidden="true">
+            <span class="sp__progress-bar" data-sp-progress-bar></span>
+          </div>
+        {%- endif -%}
+      </div>
+
+    {%- else -%}
+      {%- if request.design_mode -%}
+        <p class="sp__empty">Pick a collection in the section settings to show products here.</p>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('ScentProduct-{{ section.id }}');
+    if (!root) return;
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              io.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12 }
+      );
+      io.observe(root);
+    } else {
+      root.classList.add('is-visible');
+    }
+
+    var track = root.querySelector('[data-sp-track]');
+    if (!track) return;
+
+    var viewport = root.querySelector('.sp__viewport');
+    var prev = root.querySelector('[data-sp-prev]');
+    var next = root.querySelector('[data-sp-next]');
+    var bar = root.querySelector('[data-sp-progress-bar]');
+
+    function step() {
+      var card = track.querySelector('.sp__item');
+      if (!card) return track.clientWidth;
+      var styles = window.getComputedStyle(track);
+      var gap = parseFloat(styles.columnGap || styles.gap) || 0;
+      return card.getBoundingClientRect().width + gap;
+    }
+
+    // Centre the arrows on the product image, not on the whole card.
+    function placeArrows() {
+      if (!viewport || (!prev && !next)) return;
+      var media = track.querySelector('.sp__media');
+      if (!media) return;
+      var m = media.getBoundingClientRect();
+      var v = viewport.getBoundingClientRect();
+      if (!m.height) return;
+      root.style.setProperty('--sp-arrow-top', m.top - v.top + m.height / 2 + 'px');
+    }
+
+    function sync() {
+      var max = track.scrollWidth - track.clientWidth;
+
+      if (prev) prev.disabled = track.scrollLeft <= 2;
+      if (next) next.disabled = track.scrollLeft >= max - 2;
+
+      if (bar) {
+        var ratio = track.scrollWidth > 0 ? track.clientWidth / track.scrollWidth : 1;
+        if (ratio >= 0.999) {
+          bar.style.width = '100%';
+          bar.style.transform = 'translateX(0)';
+        } else {
+          bar.style.width = Math.max(ratio * 100, 12) + '%';
+          var progress = max > 0 ? track.scrollLeft / max : 0;
+          var travel = track.clientWidth - bar.getBoundingClientRect().width;
+          bar.style.transform = 'translateX(' + progress * travel + 'px)';
+        }
+      }
+    }
+
+    if (prev) {
+      prev.addEventListener('click', function () {
+        track.scrollBy({ left: -step(), behavior: 'smooth' });
+      });
+    }
+
+    if (next) {
+      next.addEventListener('click', function () {
+        track.scrollBy({ left: step(), behavior: 'smooth' });
+      });
+    }
+
+    function refresh() {
+      placeArrows();
+      sync();
+    }
+
+    track.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', refresh);
+    window.addEventListener('load', refresh);
+
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(refresh).observe(track);
+    }
+
+    refresh();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product Carousel",
+  "tag": "section",
+  "class": "scent-product-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "label": "Products to show",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Title",
+      "default": "Chosen For You"
+    },
+    {
+      "type": "richtext",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "select",
+      "id": "title_alignment",
+      "label": "Title alignment",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "label": "Title max size",
+      "default": 38
+    },
+    {
+      "type": "range",
+      "id": "title_gap",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Space under the title",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "carousel", "label": "Carousel" },
+        { "value": "grid", "label": "Grid" }
+      ],
+      "default": "carousel"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "grey", "label": "Light grey section, white cards" },
+        { "value": "white", "label": "White section, light grey cards" }
+      ],
+      "default": "grey"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "label": "Cards per row on desktop",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Cards per row on tablet",
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "mobile_columns",
+      "label": "Cards per row on mobile",
+      "options": [
+        { "value": "one", "label": "One and a peek" },
+        { "value": "peek", "label": "One and a half" },
+        { "value": "two", "label": "Two" }
+      ],
+      "default": "peek"
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap between cards",
+      "default": 24
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show arrows on desktop",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Card details"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show brand name",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show price",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show star rating",
+      "info": "Pulls from the reviews metafield. It stays hidden on products with no reviews yet.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "hover_second_image",
+      "label": "Swap to the second image on hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 20,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 20,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Carousel",
+      "category": "Bytefied"
+    }
+  ]
+}
+{% endschema %}

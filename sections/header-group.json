@@ -1,0 +1,192 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "t:names.header",
+  "sections": {
+    "header_section": {
+      "type": "header",
+      "blocks": {
+        "header-logo": {
+          "type": "_header-logo",
+          "static": true,
+          "settings": {
+            "hide_logo_on_home_page": false,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        },
+        "header-menu": {
+          "type": "_header-menu",
+          "static": true,
+          "settings": {
+            "menu": "main-menu",
+            "background_color": "{{ settings.color_palette.background }}",
+            "text_color": "",
+            "type_font_primary_size": "0.875rem",
+            "menu_font_style": "inverse",
+            "type_font_primary_link": "body",
+            "type_case_primary_link": "none",
+            "menu_style": "featured_products",
+            "featured_products_aspect_ratio": "4 / 5",
+            "featured_collections_aspect_ratio": "16 / 9",
+            "image_border_radius": 0,
+            "navigation_bar": false,
+            "background_color_navigation_bar": "{{ settings.color_palette.background }}",
+            "text_color_navigation_bar": "",
+            "drawer_accordion": false,
+            "drawer_accordion_expand_first": false,
+            "drawer_dividers": false
+          },
+          "blocks": {}
+        }
+      },
+      "disabled": true,
+      "custom_css": [
+        ".header-logo img {-webkit-filter: brightness(0) invert(1);}"
+      ],
+      "settings": {
+        "logo_position": "left",
+        "menu_position": "left",
+        "menu_row": "top",
+        "customer_account_menu": "customer-account-main-menu",
+        "show_search": true,
+        "search_position": "right",
+        "search_row": "top",
+        "show_country": true,
+        "country_selector_style": false,
+        "show_language": true,
+        "localization_font": "heading",
+        "localization_font_size": "0.875rem",
+        "localization_position": "right",
+        "localization_row": "top",
+        "section_width": "page-width",
+        "section_height": "standard",
+        "enable_sticky_header": "always",
+        "divider_width": 0,
+        "divider_size": "page-width",
+        "divider_color": "",
+        "border_width": 0,
+        "bottom_border_color": "",
+        "actions_display_style": "icon",
+        "actions_font_size": "0.875rem",
+        "actions_font": "body",
+        "actions_text_case": "none",
+        "background_color_top": "{{ settings.color_palette.foreground }}",
+        "text_color_top": "",
+        "background_color_bottom": "",
+        "text_color_bottom": "",
+        "bubble_style": "default",
+        "bubble_background_color": "",
+        "bubble_text_color": "",
+        "enable_transparent_header_home": false,
+        "home_inverse_logo": false,
+        "text_color_transparent_home": "",
+        "enable_transparent_header_product": false,
+        "product_inverse_logo": false,
+        "text_color_transparent_product": "",
+        "enable_transparent_header_collection": false,
+        "collection_inverse_logo": false,
+        "text_color_transparent_collection": ""
+      }
+    },
+    "bytefied_header_bxfPgb": {
+      "type": "bytefied-header",
+      "blocks": {
+        "announcement_FCTfPW": {
+          "type": "announcement",
+          "settings": {
+            "text": "Free shipping on orders over $125",
+            "link": ""
+          }
+        },
+        "announcement_LcnjER": {
+          "type": "announcement",
+          "settings": {
+            "text": "Split your purchase into 4 payments",
+            "link": ""
+          }
+        },
+        "announcement_fYybHr": {
+          "type": "announcement",
+          "settings": {
+            "text": "100% authentic and ships in 2 business days",
+            "link": ""
+          }
+        },
+        "mega_Cqgqd7": {
+          "type": "mega",
+          "settings": {
+            "menu_item": "Shop",
+            "columns": 5,
+            "title_1": "Runway Signatures",
+            "menu_1": "runway-signatures",
+            "title_2": "Designer Staples",
+            "menu_2": "designer-staples",
+            "title_3": "Timeless Classics",
+            "menu_3": "timeless-classics",
+            "title_4": "Prestige Niche",
+            "menu_4": "prestige-niche",
+            "title_5": "Cult Favorites",
+            "menu_5": "cult-favorites",
+            "title_6": "Crafted by Perfumers",
+            "menu_6": "crafted-by-perfumers",
+            "title_7": "Arabian & Oud",
+            "menu_7": "arabian-oud",
+            "title_8": "Fresh Finds",
+            "menu_8": "fresh-finds",
+            "title_9": "Worth Discovering",
+            "menu_9": "worth-discovering",
+            "title_10": "",
+            "menu_10": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement_FCTfPW",
+        "announcement_LcnjER",
+        "announcement_fYybHr",
+        "mega_Cqgqd7"
+      ],
+      "name": "Bytefied Header",
+      "settings": {
+        "logo": "shopify://shop_images/samsfragranceshop1.webp",
+        "logo_width": 170,
+        "logo_width_mobile": 120,
+        "menu": "main-menu",
+        "auto_mega": false,
+        "menu_position": "center",
+        "menu_size": 14,
+        "menu_gap": 26,
+        "uppercase_menu": true,
+        "show_caret": false,
+        "color_scheme": "light",
+        "container_width": 1200,
+        "header_height": 84,
+        "header_height_mobile": 64,
+        "mobile_breakpoint": 1150,
+        "sticky": "reveal",
+        "search_placeholder": "Search by brand, name or scent note",
+        "bar_bg": "#1c1a17",
+        "bar_fg": "#ffffff",
+        "bar_speed": 4,
+        "instagram": "",
+        "tiktok": "",
+        "facebook": "",
+        "youtube": ""
+      }
+    }
+  },
+  "order": [
+    "header_section",
+    "bytefied_header_bxfPgb"
+  ]
+}

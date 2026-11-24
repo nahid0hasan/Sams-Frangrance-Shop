@@ -1,0 +1,1800 @@
+{%- liquid
+  assign ppp = section.settings.products_per_page
+  assign sort_by = collection.sort_by | default: collection.default_sort_by
+-%}
+
+{% style %}
+  #Shop-{{ section.id }} {
+    --bs-black: #1c1a17;
+    --bs-white: #ffffff;
+    --bs-grey: #f5f5f4;
+    --bs-card: #fafafb;
+    --bs-border: #e5e5e3;
+    --bs-muted: #6b6b68;
+    --bs-hover: #3a3734;
+    --bs-font: 'Geist', 'Geist Sans', 'GeistVF', -apple-system, system-ui, sans-serif;
+
+    --bs-gap: {{ section.settings.column_gap }}px;
+    --bs-cols: {{ section.settings.columns_desktop }};
+
+    position: relative;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: {% if section.settings.color_scheme == 'grey' %}var(--bs-grey){% else %}var(--bs-white){% endif %};
+    color: var(--bs-black);
+    font-family: var(--bs-font);
+
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  #Shop-{{ section.id }},
+  #Shop-{{ section.id }} * {
+    font-family: var(--bs-font) !important;
+  }
+
+  #Shop-{{ section.id }} .container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* Head */
+  #Shop-{{ section.id }} .bs__head {
+    margin: 0 0 24px;
+  }
+
+  #Shop-{{ section.id }} .bs__title {
+    margin: 0;
+    font-size: clamp(1.75rem, 3.4vw, {{ section.settings.title_size | divided_by: 16.0 }}rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--bs-black);
+  }
+
+  #Shop-{{ section.id }} .bs__desc {
+    margin: 14px 0 0;
+    max-width: 78ch;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--bs-muted);
+  }
+
+  #Shop-{{ section.id }} .bs__desc p {
+    margin: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  /* Trust bar */
+  #Shop-{{ section.id }} .bs__trust {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 24px 0 0;
+    padding: 12px 18px;
+    border-radius: 6px;
+    background-color: var(--bs-black);
+    color: var(--bs-white);
+    text-decoration: none;
+    transition: background-color 0.28s ease;
+  }
+
+  #Shop-{{ section.id }} a.bs__trust:hover {
+    background-color: var(--bs-hover);
+  }
+
+  #Shop-{{ section.id }} .bs__trust-icon {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    color: var(--bs-white);
+  }
+
+  #Shop-{{ section.id }} .bs__trust-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  #Shop-{{ section.id }} .bs__trust-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+  }
+
+  #Shop-{{ section.id }} .bs__trust-title {
+    display: block;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  #Shop-{{ section.id }} .bs__trust-sub {
+    display: block;
+    margin: 3px 0 0;
+    font-size: 11px;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* Nav chips */
+  #Shop-{{ section.id }} .bs__nav {
+    position: relative;
+    margin: 26px 0 0;
+    padding-bottom: 4px;
+  }
+
+  #Shop-{{ section.id }} .bs__nav-track {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    padding-right: 44px;
+  }
+
+  #Shop-{{ section.id }} .bs__nav-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  #Shop-{{ section.id }} .bs__nav-link {
+    flex: 0 0 auto;
+    padding: 4px 0;
+    font-size: 14px;
+    line-height: 1.3;
+    white-space: nowrap;
+    color: var(--bs-black);
+    text-decoration: none;
+    border-bottom: 1px solid var(--bs-border);
+    transition: border-color 0.24s ease, color 0.24s ease;
+  }
+
+  #Shop-{{ section.id }} .bs__nav-link:hover,
+  #Shop-{{ section.id }} .bs__nav-link[aria-current='page'] {
+    border-color: var(--bs-black);
+  }
+
+  #Shop-{{ section.id }} .bs__nav-next {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--bs-border);
+    border-radius: 50%;
+    background-color: {% if section.settings.color_scheme == 'grey' %}var(--bs-grey){% else %}var(--bs-white){% endif %};
+    color: var(--bs-black);
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.26s ease, color 0.26s ease;
+  }
+
+  #Shop-{{ section.id }} .bs__nav-next svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  #Shop-{{ section.id }} .bs__nav-next:hover {
+    background-color: var(--bs-black);
+    border-color: var(--bs-black);
+    color: var(--bs-white);
+  }
+
+  /* Layout */
+  #Shop-{{ section.id }} .bs__layout {
+    display: grid;
+    grid-template-columns: {{ section.settings.sidebar_width }}px minmax(0, 1fr);
+    gap: 40px;
+    margin-top: 34px;
+    align-items: start;
+  }
+
+  #Shop-{{ section.id }} .bs__sidebar {
+    position: sticky;
+    top: 24px;
+  }
+
+  /* Filter form */
+  #Shop-{{ section.id }} .bs__label {
+    margin: 0 0 10px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--bs-black);
+  }
+
+  #Shop-{{ section.id }} .bs__field {
+    position: relative;
+    margin-bottom: 26px;
+  }
+
+  #Shop-{{ section.id }} .bs__select {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 38px 0 14px;
+    border: 1px solid var(--bs-border);
+    border-radius: 3px;
+    background-color: var(--bs-white);
+    color: var(--bs-black);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.3;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+  }
+
+  #Shop-{{ section.id }} .bs__select:focus-visible {
+    outline: 2px solid var(--bs-black);
+    outline-offset: 2px;
+  }
+
+  #Shop-{{ section.id }} .bs__caret {
+    position: absolute;
+    right: 13px;
+    bottom: 14px;
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+    color: var(--bs-black);
+  }
+
+  #Shop-{{ section.id }} .bs__filter {
+    margin-bottom: 10px;
+    border: 1px solid var(--bs-border);
+    border-radius: 3px;
+    background-color: var(--bs-white);
+  }
+
+  #Shop-{{ section.id }} .bs__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.3;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+
+  #Shop-{{ section.id }} .bs__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  #Shop-{{ section.id }} .bs__summary-icon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #Shop-{{ section.id }} .bs__bubble {
+    min-width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    border-radius: 999px;
+    background-color: var(--bs-black);
+    color: var(--bs-white);
+    font-size: 10px;
+    font-weight: 600;
+    box-sizing: border-box;
+  }
+
+  #Shop-{{ section.id }} .bs__summary svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.26s ease;
+  }
+
+  #Shop-{{ section.id }} .bs__filter[open] > .bs__summary svg {
+    transform: rotate(180deg);
+  }
+
+  #Shop-{{ section.id }} .bs__panel {
+    border-top: 1px solid var(--bs-border);
+    max-height: 320px;
+    overflow-y: auto;
+  }
+
+  #Shop-{{ section.id }} .bs__panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--bs-muted);
+    border-bottom: 1px solid var(--bs-border);
+    position: sticky;
+    top: 0;
+    background-color: var(--bs-white);
+  }
+
+  #Shop-{{ section.id }} .bs__reset {
+    color: var(--bs-black);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  #Shop-{{ section.id }} .bs__list {
+    margin: 0;
+    padding: 8px 14px 12px;
+    list-style: none;
+  }
+
+  #Shop-{{ section.id }} .bs__check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    font-size: 14px;
+    line-height: 1.35;
+    cursor: pointer;
+    color: var(--bs-black);
+  }
+
+  #Shop-{{ section.id }} .bs__check input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  #Shop-{{ section.id }} .bs__box {
+    position: relative;
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--bs-black);
+    border-radius: 2px;
+    background-color: var(--bs-white);
+    transition: background-color 0.2s ease;
+  }
+
+  #Shop-{{ section.id }} .bs__box svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    color: var(--bs-white);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  #Shop-{{ section.id }} .bs__check input:checked + .bs__box {
+    background-color: var(--bs-black);
+  }
+
+  #Shop-{{ section.id }} .bs__check input:checked + .bs__box svg {
+    opacity: 1;
+  }
+
+  #Shop-{{ section.id }} .bs__check input:focus-visible + .bs__box {
+    outline: 2px solid var(--bs-black);
+    outline-offset: 2px;
+  }
+
+  #Shop-{{ section.id }} .bs__check-text {
+    flex: 1 1 auto;
+  }
+
+  #Shop-{{ section.id }} .bs__num {
+    color: var(--bs-muted);
+    font-size: 13px;
+  }
+
+  #Shop-{{ section.id }} .bs__check.is-disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  #Shop-{{ section.id }} .bs__price {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  #Shop-{{ section.id }} .bs__price-field {
+    flex: 1 1 0;
+  }
+
+  #Shop-{{ section.id }} .bs__price-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: var(--bs-muted);
+  }
+
+  #Shop-{{ section.id }} .bs__price-input {
+    width: 100%;
+    min-height: 40px;
+    padding: 0 10px;
+    border: 1px solid var(--bs-border);
+    border-radius: 3px;
+    background-color: var(--bs-white);
+    color: var(--bs-black);
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+
+  /* Active chips */
+  #Shop-{{ section.id }} .bs__active {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  #Shop-{{ section.id }} .bs__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 10px;
+    border-radius: 2px;
+    background-color: rgba(28, 26, 23, 0.07);
+    color: var(--bs-black);
+    font-size: 12px;
+    line-height: 1.3;
+    text-decoration: none;
+    transition: background-color 0.24s ease;
+  }
+
+  #Shop-{{ section.id }} .bs__chip:hover {
+    background-color: rgba(28, 26, 23, 0.14);
+  }
+
+  #Shop-{{ section.id }} .bs__chip svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  #Shop-{{ section.id }} .bs__chip--clear {
+    background-color: var(--bs-black);
+    color: var(--bs-white);
+  }
+
+  #Shop-{{ section.id }} .bs__chip--clear:hover {
+    background-color: var(--bs-hover);
+  }
+
+  /* Mobile filter trigger */
+  #Shop-{{ section.id }} .bs__mobile-bar {
+    display: none;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  #Shop-{{ section.id }} .bs__mobile-btn {
+    flex: 1 1 auto;
+    min-height: 46px;
+    padding: 0 18px;
+    border: 1px solid var(--bs-black);
+    border-radius: 2px;
+    background-color: var(--bs-black);
+    color: var(--bs-white);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  #Shop-{{ section.id }} .bs__drawer-head {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+
+  #Shop-{{ section.id }} .bs__drawer-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  #Shop-{{ section.id }} .bs__drawer-close {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--bs-border);
+    border-radius: 50%;
+    background: none;
+    color: var(--bs-black);
+    cursor: pointer;
+  }
+
+  #Shop-{{ section.id }} .bs__drawer-close svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  #Shop-{{ section.id }} .bs__apply {
+    display: none;
+  }
+
+  #Shop-{{ section.id }} .bs__overlay {
+    display: none;
+  }
+
+  /* Count */
+  #Shop-{{ section.id }} .bs__count {
+    margin: 0 0 18px;
+    font-size: 14px;
+    color: var(--bs-muted);
+  }
+
+  /* Grid */
+  #Shop-{{ section.id }} .bs__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--bs-cols), minmax(0, 1fr));
+    gap: 44px var(--bs-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  #Shop-{{ section.id }} .bs__item {
+    animation: bsFade-{{ section.id }} 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+
+  @keyframes bsFade-{{ section.id }} {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Card */
+  #Shop-{{ section.id }} .bs__card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  #Shop-{{ section.id }} .bs__media {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: var(--bs-card);
+    border: 1px solid var(--bs-border);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
+  }
+
+  #Shop-{{ section.id }} .bs__card:hover .bs__media {
+    border-color: #d8d8d5;
+    box-shadow: 0 14px 30px rgba(28, 26, 23, 0.1);
+    transform: translateY(-4px);
+  }
+
+  #Shop-{{ section.id }} .bs__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 16px;
+    box-sizing: border-box;
+    transition: opacity 0.4s ease, transform 0.55s ease;
+  }
+
+  #Shop-{{ section.id }} .bs__card:hover .bs__img--main {
+    transform: scale(1.04);
+  }
+
+  #Shop-{{ section.id }} .bs__img--alt {
+    opacity: 0;
+  }
+
+  #Shop-{{ section.id }} .bs__card:hover .bs__img--alt {
+    opacity: 1;
+  }
+
+  #Shop-{{ section.id }} .bs__badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    padding: 6px 10px;
+    border-radius: 2px;
+    background-color: var(--bs-black);
+    color: var(--bs-white);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  #Shop-{{ section.id }} .bs__badge--soldout {
+    background-color: var(--bs-white);
+    color: var(--bs-black);
+    border: 1px solid var(--bs-border);
+  }
+
+  #Shop-{{ section.id }} .bs__info {
+    padding: 18px 2px 0;
+  }
+
+  #Shop-{{ section.id }} .bs__vendor {
+    margin: 0 0 6px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--bs-black);
+  }
+
+  #Shop-{{ section.id }} .bs__name {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--bs-black);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  #Shop-{{ section.id }} .bs__card:hover .bs__name {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  #Shop-{{ section.id }} .bs__price-text {
+    margin: 10px 0 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--bs-black);
+  }
+
+  #Shop-{{ section.id }} .bs__price-text del {
+    margin-left: 8px;
+    font-weight: 400;
+    color: var(--bs-muted);
+    text-decoration: line-through;
+  }
+
+  #Shop-{{ section.id }} .bs__rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  #Shop-{{ section.id }} .bs__stars {
+    position: relative;
+    display: inline-block;
+    line-height: 0;
+  }
+
+  #Shop-{{ section.id }} .bs__stars-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    line-height: 0;
+  }
+
+  #Shop-{{ section.id }} .bs__stars svg {
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  #Shop-{{ section.id }} .bs__stars-bg svg {
+    fill: var(--bs-border);
+  }
+
+  #Shop-{{ section.id }} .bs__stars-fill svg {
+    fill: {{ section.settings.star_color }};
+  }
+
+  #Shop-{{ section.id }} .bs__reviews {
+    font-size: 13px;
+    line-height: 1.3;
+    color: var(--bs-muted);
+  }
+
+  /* Empty */
+  #Shop-{{ section.id }} .bs__empty {
+    padding: 60px 0;
+    text-align: center;
+  }
+
+  #Shop-{{ section.id }} .bs__empty p {
+    margin: 0 0 18px;
+    font-size: 16px;
+    color: var(--bs-muted);
+  }
+
+  /* Pagination */
+  #Shop-{{ section.id }} .bs__pagination {
+    margin-top: 56px;
+    text-align: center;
+  }
+
+  #Shop-{{ section.id }} .bs__progress-text {
+    margin: 0 0 12px;
+    font-size: 14px;
+    color: var(--bs-muted);
+  }
+
+  #Shop-{{ section.id }} .bs__progress {
+    position: relative;
+    width: 220px;
+    height: 3px;
+    margin: 0 auto 24px;
+    border-radius: 999px;
+    background-color: var(--bs-border);
+    overflow: hidden;
+  }
+
+  #Shop-{{ section.id }} .bs__progress span {
+    position: absolute;
+    inset: 0 auto 0 0;
+    height: 100%;
+    background-color: var(--bs-black);
+    transition: width 0.4s ease;
+  }
+
+  #Shop-{{ section.id }} .bs__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 54px;
+    padding: 0 40px;
+    border-radius: 2px;
+    border: 1px solid var(--bs-black);
+    background-color: var(--bs-black);
+    color: var(--bs-white);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.28s ease, border-color 0.28s ease, transform 0.28s ease;
+  }
+
+  #Shop-{{ section.id }} .bs__btn:hover {
+    background-color: var(--bs-hover);
+    border-color: var(--bs-hover);
+    transform: translateY(-1px);
+  }
+
+  #Shop-{{ section.id }} .bs__btn[disabled] {
+    opacity: 0.55;
+    cursor: default;
+    transform: none;
+  }
+
+  #Shop-{{ section.id }} .bs__spinner {
+    display: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: var(--bs-white);
+    border-radius: 50%;
+    animation: bsSpin-{{ section.id }} 0.7s linear infinite;
+  }
+
+  #Shop-{{ section.id }}.is-loading-more .bs__spinner {
+    display: block;
+  }
+
+  @keyframes bsSpin-{{ section.id }} {
+    to { transform: rotate(360deg); }
+  }
+
+  #Shop-{{ section.id }}.is-loading .bs__results {
+    opacity: 0.45;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #Shop-{{ section.id }} .bs__item {
+      animation: none;
+    }
+  }
+
+  /* Tablet */
+  @media screen and (max-width: 1099px) {
+    #Shop-{{ section.id }} {
+      --bs-cols: {{ section.settings.columns_tablet }};
+    }
+
+    #Shop-{{ section.id }} .bs__layout {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0;
+    }
+
+    #Shop-{{ section.id }} .bs__mobile-bar {
+      display: flex;
+    }
+
+    #Shop-{{ section.id }} .bs__drawer-head {
+      display: flex;
+    }
+
+    #Shop-{{ section.id }} .bs__sidebar {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1000;
+      width: 88%;
+      max-width: 380px;
+      padding: 20px;
+      background-color: {% if section.settings.color_scheme == 'grey' %}var(--bs-grey){% else %}var(--bs-white){% endif %};
+      box-sizing: border-box;
+      overflow-y: auto;
+      transform: translateX(-102%);
+      transition: transform 0.36s cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+
+    #Shop-{{ section.id }}.is-drawer-open .bs__sidebar {
+      transform: translateX(0);
+    }
+
+    #Shop-{{ section.id }} .bs__overlay {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background-color: rgba(28, 26, 23, 0.45);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s;
+    }
+
+    #Shop-{{ section.id }}.is-drawer-open .bs__overlay {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    #Shop-{{ section.id }} .bs__apply {
+      display: block;
+      width: 100%;
+      min-height: 50px;
+      margin-top: 22px;
+      border: 1px solid var(--bs-black);
+      border-radius: 2px;
+      background-color: var(--bs-black);
+      color: var(--bs-white);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+  }
+
+  /* Mobile */
+  @media screen and (max-width: 749px) {
+    #Shop-{{ section.id }} {
+      --bs-cols: {{ section.settings.columns_mobile }};
+      --bs-gap: 14px;
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px;
+    }
+
+    #Shop-{{ section.id }} .bs__grid {
+      gap: 30px var(--bs-gap);
+    }
+
+    #Shop-{{ section.id }} .bs__media img {
+      padding: 10px;
+    }
+
+    #Shop-{{ section.id }} .bs__info {
+      padding-top: 14px;
+    }
+
+    #Shop-{{ section.id }} .bs__name {
+      font-size: 14px;
+    }
+
+    #Shop-{{ section.id }} .bs__price-text {
+      font-size: 15px;
+    }
+
+    #Shop-{{ section.id }} .bs__btn {
+      width: 100%;
+    }
+  }
+{% endstyle %}
+
+<section
+  id="Shop-{{ section.id }}"
+  class="bytefied-shop"
+  data-shop-section="{{ section.id }}"
+  data-shop-url="{{ collection.url }}"
+>
+  <div class="container">
+    {%- if collection == blank -%}
+      {%- if request.design_mode -%}
+        <p class="bs__count">This section is built for collection pages. Add it to a collection template.</p>
+      {%- endif -%}
+    {%- else -%}
+      <div class="bs__head">
+        {%- if section.settings.show_title -%}
+          <h1 class="bs__title">{{ collection.title }}</h1>
+        {%- endif -%}
+
+        {%- if section.settings.show_description and collection.description != blank -%}
+          <div class="bs__desc">{{ collection.description }}</div>
+        {%- endif -%}
+
+        {%- if section.settings.show_trust -%}
+          <a
+            class="bs__trust"
+            href="{{ section.settings.trust_link | default: '#' }}"
+          >
+            <span class="bs__trust-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M12 3.2l7 2.9v5.4c0 4.2-2.9 7.9-7 9.3-4.1-1.4-7-5.1-7-9.3V6.1l7-2.9z"/>
+                <path d="M8.9 12.1l2.1 2.1 4.1-4.2"/>
+              </svg>
+            </span>
+            <span class="bs__trust-text">
+              <span class="bs__trust-title">{{ section.settings.trust_title | escape }}</span>
+              {%- if section.settings.trust_sub != blank -%}
+                <span class="bs__trust-sub">{{ section.settings.trust_sub | escape }}</span>
+              {%- endif -%}
+            </span>
+          </a>
+        {%- endif -%}
+
+        {%- if section.settings.nav_menu != blank -%}
+          <nav class="bs__nav" aria-label="Collection links">
+            <div class="bs__nav-track" data-shop-nav>
+              {%- for link in linklists[section.settings.nav_menu].links -%}
+                <a
+                  class="bs__nav-link"
+                  href="{{ link.url }}"
+                  {% if link.active %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  {{- link.title -}}
+                </a>
+              {%- endfor -%}
+            </div>
+            <button type="button" class="bs__nav-next" data-shop-nav-next aria-label="Scroll links">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M4 12h16M14 6l6 6-6 6"/>
+              </svg>
+            </button>
+          </nav>
+        {%- endif -%}
+      </div>
+
+      {%- paginate collection.products by ppp -%}
+        <div class="bs__layout">
+          <div class="bs__overlay" data-shop-overlay></div>
+
+          <aside class="bs__sidebar" data-shop-filters>
+            <div class="bs__drawer-head">
+              <p class="bs__drawer-title">Filter and sort</p>
+              <button type="button" class="bs__drawer-close" data-shop-close aria-label="Close filters">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M6 6l12 12M18 6L6 18"/>
+                </svg>
+              </button>
+            </div>
+
+            <form data-shop-form>
+              <div class="bs__field">
+                <p class="bs__label">Sort by</p>
+                <select class="bs__select" name="sort_by" aria-label="Sort by">
+                  {%- for option in collection.sort_options -%}
+                    <option
+                      value="{{ option.value }}"
+                      {% if option.value == sort_by %}
+                        selected
+                      {% endif %}
+                    >
+                      {{ option.name }}
+                    </option>
+                  {%- endfor -%}
+                </select>
+                <span class="bs__caret">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 9l6 6 6-6"/>
+                  </svg>
+                </span>
+              </div>
+
+              {%- if collection.filters.size > 0 -%}
+                <p class="bs__label">Filter by</p>
+
+                {%- for filter in collection.filters -%}
+                  <details
+                    class="bs__filter"
+                    {% if filter.active_values.size > 0
+                      or filter.type == 'price_range'
+                      and filter.min_value.value != blank
+                    %}
+                      open
+                    {% endif %}
+                  >
+                    <summary class="bs__summary">
+                      <span class="bs__summary-icon">
+                        <span>{{ filter.label }}</span>
+                        {%- if filter.active_values.size > 0 -%}
+                          <span class="bs__bubble">{{ filter.active_values.size }}</span>
+                        {%- endif -%}
+                      </span>
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M6 9l6 6 6-6"/>
+                      </svg>
+                    </summary>
+
+                    <div class="bs__panel">
+                      {%- case filter.type -%}
+                        {%- when 'price_range' -%}
+                          <div class="bs__panel-head">
+                            <span>Highest price is {{ filter.range_max | money }}</span>
+                            <a class="bs__reset" href="{{ filter.url_to_remove }}" data-shop-link>Reset</a>
+                          </div>
+                          <div class="bs__price">
+                            <div class="bs__price-field">
+                              <label class="bs__price-label" for="ShopMin-{{ section.id }}-{{ forloop.index }}"
+                                >From</label
+                              >
+                              <input
+                                id="ShopMin-{{ section.id }}-{{ forloop.index }}"
+                                class="bs__price-input"
+                                name="{{ filter.min_value.param_name }}"
+                                type="number"
+                                inputmode="decimal"
+                                placeholder="0"
+                                min="0"
+                                max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                                {% if filter.min_value.value %}
+                                  value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                                {% endif %}
+                              >
+                            </div>
+                            <div class="bs__price-field">
+                              <label class="bs__price-label" for="ShopMax-{{ section.id }}-{{ forloop.index }}"
+                                >To</label
+                              >
+                              <input
+                                id="ShopMax-{{ section.id }}-{{ forloop.index }}"
+                                class="bs__price-input"
+                                name="{{ filter.max_value.param_name }}"
+                                type="number"
+                                inputmode="decimal"
+                                placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                                min="0"
+                                max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                                {% if filter.max_value.value %}
+                                  value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                                {% endif %}
+                              >
+                            </div>
+                          </div>
+
+                        {%- else -%}
+                          <div class="bs__panel-head">
+                            <span>{{ filter.active_values.size }} selected</span>
+                            <a class="bs__reset" href="{{ filter.url_to_remove }}" data-shop-link>Reset</a>
+                          </div>
+                          <ul class="bs__list" role="list">
+                            {%- for value in filter.values -%}
+                              {%- liquid
+                                assign is_disabled = false
+                                if value.count == 0 and value.active == false
+                                  assign is_disabled = true
+                                endif
+                              -%}
+                              <li>
+                                <label class="bs__check{% if is_disabled %} is-disabled{% endif %}">
+                                  <input
+                                    type="checkbox"
+                                    name="{{ value.param_name }}"
+                                    value="{{ value.value | escape }}"
+                                    {% if value.active %}
+                                      checked
+                                    {% endif %}
+                                    {% if is_disabled %}
+                                      disabled
+                                    {% endif %}
+                                  >
+                                  <span class="bs__box">
+                                    <svg
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      stroke-width="2.6"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      aria-hidden="true"
+                                    >
+                                      <path d="M6 12.5l4 4 8-8"/>
+                                    </svg>
+                                  </span>
+                                  <span class="bs__check-text">{{ value.label }}</span>
+                                  <span class="bs__num">{{ value.count }}</span>
+                                </label>
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                      {%- endcase -%}
+                    </div>
+                  </details>
+                {%- endfor -%}
+
+                {%- assign has_active = false -%}
+                {%- for filter in collection.filters -%}
+                  {%- if filter.active_values.size > 0 -%}{%- assign has_active = true -%}{%- endif -%}
+                  {%- if filter.type == 'price_range'
+                    and filter.min_value.value != blank
+                    or filter.type == 'price_range'
+                    and filter.max_value.value != blank
+                  -%}
+                    {%- assign has_active = true -%}
+                  {%- endif -%}
+                {%- endfor -%}
+
+                {%- if has_active -%}
+                  <div class="bs__active">
+                    {%- for filter in collection.filters -%}
+                      {%- for value in filter.active_values -%}
+                        <a class="bs__chip" href="{{ value.url_to_remove }}" data-shop-link>
+                          {{ value.label }}
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M6 6l12 12M18 6L6 18"/>
+                          </svg>
+                        </a>
+                      {%- endfor -%}
+                    {%- endfor -%}
+                    <a class="bs__chip bs__chip--clear" href="{{ collection.url }}?sort_by={{ sort_by }}" data-shop-link
+                      >Clear all</a
+                    >
+                  </div>
+                {%- endif -%}
+              {%- endif -%}
+
+              <button type="button" class="bs__apply" data-shop-close>Show results</button>
+            </form>
+          </aside>
+
+          <div class="bs__main">
+            <div class="bs__mobile-bar">
+              <button type="button" class="bs__mobile-btn" data-shop-open>Filter and sort</button>
+            </div>
+
+            <div class="bs__results" data-shop-results>
+              {%- if section.settings.show_count -%}
+                <p class="bs__count">
+                  {{ paginate.items }}
+                  {% if paginate.items == 1 %}product{% else %}products{% endif %}
+                </p>
+              {%- endif -%}
+
+              {%- if collection.products.size == 0 -%}
+                <div class="bs__empty">
+                  <p>No products match these filters right now.</p>
+                  <a class="bs__btn" href="{{ collection.url }}" data-shop-link>Clear filters</a>
+                </div>
+              {%- else -%}
+                <ul class="bs__grid" data-shop-grid role="list">
+                  {%- for product in collection.products -%}
+                    {%- liquid
+                      assign alt_image = product.images[1]
+
+                      assign rating_value = 0
+                      assign rating_scale = 5
+                      assign rating_count = 0
+
+                      if product.metafields.reviews.rating != blank
+                        assign rating_value = product.metafields.reviews.rating.value.rating | times: 1.0
+                        assign rating_scale = product.metafields.reviews.rating.value.scale_max | times: 1.0
+                      endif
+
+                      if product.metafields.reviews.rating_count != blank
+                        assign rating_count = product.metafields.reviews.rating_count.value | times: 1
+                      endif
+
+                      assign star_pct = 0
+                      if rating_scale > 0
+                        assign star_pct = rating_value | divided_by: rating_scale | times: 100
+                      endif
+
+                      assign card_alt = product.title | escape
+                    -%}
+
+                    <li class="bs__item">
+                      <a class="bs__card" href="{{ product.url }}">
+                        <div class="bs__media">
+                          {%- if product.available == false -%}
+                            <span class="bs__badge bs__badge--soldout">Sold Out</span>
+                          {%- elsif product.compare_at_price > product.price -%}
+                            <span class="bs__badge">Sale</span>
+                          {%- endif -%}
+
+                          {%- if product.featured_image != blank -%}
+                            {{
+                              product.featured_image
+                              | image_url: width: 800
+                              | image_tag:
+                                loading: 'lazy',
+                                sizes: '(max-width: 749px) 46vw, 300px',
+                                widths: '200, 300, 400, 600, 800',
+                                class: 'bs__img bs__img--main',
+                                alt: card_alt
+                            }}
+                            {%- if section.settings.hover_second_image and alt_image != blank -%}
+                              {{
+                                alt_image
+                                | image_url: width: 800
+                                | image_tag:
+                                  loading: 'lazy',
+                                  sizes: '(max-width: 749px) 46vw, 300px',
+                                  widths: '200, 300, 400, 600, 800',
+                                  class: 'bs__img bs__img--alt',
+                                  alt: ''
+                              }}
+                            {%- endif -%}
+                          {%- else -%}
+                            {{ 'product-1' | placeholder_svg_tag: 'bs__img bs__img--main' }}
+                          {%- endif -%}
+                        </div>
+
+                        <div class="bs__info">
+                          {%- if section.settings.show_vendor -%}
+                            {%- capture brand -%}{%- render 'product-brand', product: product -%}{%- endcapture -%}
+                            {%- if brand != blank -%}
+                              <p class="bs__vendor">{{ brand }}</p>
+                            {%- endif -%}
+                          {%- endif -%}
+
+                          <p class="bs__name">{{ product.title }}</p>
+
+                          {%- if section.settings.show_price -%}
+                            <p class="bs__price-text">
+                              {%- if product.price_varies -%}
+                                {{ product.price_min | money }} to {{ product.price_max | money }}
+                              {%- else -%}
+                                {{ product.price | money }}
+                                {%- if product.compare_at_price > product.price -%}
+                                  <del>{{ product.compare_at_price | money }}</del>
+                                {%- endif -%}
+                              {%- endif -%}
+                            </p>
+                          {%- endif -%}
+
+                          {%- if section.settings.show_rating and rating_count > 0 -%}
+                            <div class="bs__rating">
+                              <span
+                                class="bs__stars"
+                                role="img"
+                                aria-label="Rated {{ rating_value }} out of {{ rating_scale }}"
+                              >
+                                <span class="bs__stars-bg" aria-hidden="true">
+                                  {%- for i in (1..5) -%}
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                      <path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4 6.2 20.5l1.1-6.5L2.6 9.4l6.5-.9L12 2.6z"/>
+                                    </svg>
+                                  {%- endfor -%}
+                                </span>
+                                <span class="bs__stars-fill" style="width: {{ star_pct }}%;" aria-hidden="true">
+                                  {%- for i in (1..5) -%}
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                      <path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4 6.2 20.5l1.1-6.5L2.6 9.4l6.5-.9L12 2.6z"/>
+                                    </svg>
+                                  {%- endfor -%}
+                                </span>
+                              </span>
+                              <span class="bs__reviews">
+                                {{ rating_count }}
+                                {% if rating_count == 1 %}review{% else %}reviews{% endif %}
+                              </span>
+                            </div>
+                          {%- endif -%}
+                        </div>
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+
+                {%- liquid
+                  assign shown = paginate.current_offset | plus: collection.products.size
+                  assign pct = 100
+                  if paginate.items > 0
+                    assign pct = shown | times: 100 | divided_by: paginate.items
+                  endif
+                -%}
+
+                <div class="bs__pagination" data-shop-pagination>
+                  {%- if paginate.items > paginate.page_size -%}
+                    <p class="bs__progress-text">You have viewed {{ shown }} of {{ paginate.items }} products</p>
+                    <div class="bs__progress" aria-hidden="true">
+                      <span style="width: {{ pct }}%;"></span>
+                    </div>
+                  {%- endif -%}
+
+                  {%- if paginate.next -%}
+                    <button
+                      type="button"
+                      class="bs__btn"
+                      data-shop-more
+                      data-shop-next="{{ paginate.next.url }}"
+                    >
+                      <span class="bs__spinner" aria-hidden="true"></span>
+                      <span>{{ section.settings.load_more_label | escape }}</span>
+                    </button>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      {%- endpaginate -%}
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('Shop-{{ section.id }}');
+    if (!root || root.dataset.shopReady === 'true') return;
+    root.dataset.shopReady = 'true';
+
+    var sectionId = root.getAttribute('data-shop-section');
+    var baseUrl = root.getAttribute('data-shop-url') || window.location.pathname;
+
+    function sectionUrl(url) {
+      return url + (url.indexOf('?') > -1 ? '&' : '?') + 'section_id=' + sectionId;
+    }
+
+    function buildUrl(form) {
+      var params = new URLSearchParams();
+      var data = new FormData(form);
+      data.forEach(function (value, key) {
+        if (String(value).trim() !== '') params.append(key, value);
+      });
+      var query = params.toString();
+      return baseUrl + (query ? '?' + query : '');
+    }
+
+    function fetchDoc(url) {
+      return fetch(sectionUrl(url))
+        .then(function (res) {
+          return res.text();
+        })
+        .then(function (html) {
+          return new DOMParser().parseFromString(html, 'text/html');
+        });
+    }
+
+    function render(url, scroll) {
+      root.classList.add('is-loading');
+
+      fetchDoc(url)
+        .then(function (doc) {
+          var newResults = doc.querySelector('[data-shop-results]');
+          var newFilters = doc.querySelector('[data-shop-filters]');
+          var results = root.querySelector('[data-shop-results]');
+          var filters = root.querySelector('[data-shop-filters]');
+
+          if (newResults && results) results.innerHTML = newResults.innerHTML;
+          if (newFilters && filters) filters.innerHTML = newFilters.innerHTML;
+
+          window.history.pushState({ shop: true }, '', url);
+          root.classList.remove('is-loading');
+          closeDrawer();
+
+          if (scroll) {
+            var top = root.getBoundingClientRect().top + window.pageYOffset - 20;
+            window.scrollTo({ top: top, behavior: 'smooth' });
+          }
+        })
+        .catch(function () {
+          root.classList.remove('is-loading');
+          window.location.href = url;
+        });
+    }
+
+    function loadMore(button) {
+      var next = button.getAttribute('data-shop-next');
+      if (!next) return;
+
+      root.classList.add('is-loading-more');
+      button.disabled = true;
+
+      fetchDoc(next)
+        .then(function (doc) {
+          var grid = root.querySelector('[data-shop-grid]');
+          var newItems = doc.querySelectorAll('[data-shop-grid] > li');
+          var newPagination = doc.querySelector('[data-shop-pagination]');
+          var pagination = root.querySelector('[data-shop-pagination]');
+
+          if (grid) {
+            newItems.forEach(function (item) {
+              grid.appendChild(item);
+            });
+          }
+          if (pagination && newPagination) {
+            pagination.replaceWith(newPagination);
+          } else if (pagination) {
+            pagination.remove();
+          }
+
+          window.history.replaceState({ shop: true }, '', next);
+          root.classList.remove('is-loading-more');
+        })
+        .catch(function () {
+          root.classList.remove('is-loading-more');
+          button.disabled = false;
+        });
+    }
+
+    function openDrawer() {
+      root.classList.add('is-drawer-open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+      root.classList.remove('is-drawer-open');
+      document.body.style.overflow = '';
+    }
+
+    root.addEventListener('change', function (event) {
+      var form = event.target.closest('[data-shop-form]');
+      if (!form) return;
+      render(buildUrl(form), false);
+    });
+
+    var priceTimer;
+    root.addEventListener('input', function (event) {
+      if (!event.target.classList.contains('bs__price-input')) return;
+      var form = event.target.closest('[data-shop-form]');
+      if (!form) return;
+      clearTimeout(priceTimer);
+      priceTimer = setTimeout(function () {
+        render(buildUrl(form), false);
+      }, 600);
+    });
+
+    root.addEventListener('click', function (event) {
+      var link = event.target.closest('[data-shop-link]');
+      if (link) {
+        event.preventDefault();
+        render(link.getAttribute('href'), false);
+        return;
+      }
+
+      var more = event.target.closest('[data-shop-more]');
+      if (more) {
+        event.preventDefault();
+        loadMore(more);
+        return;
+      }
+
+      if (event.target.closest('[data-shop-open]')) {
+        openDrawer();
+        return;
+      }
+
+      if (event.target.closest('[data-shop-close]') || event.target.closest('[data-shop-overlay]')) {
+        closeDrawer();
+        return;
+      }
+
+      var navNext = event.target.closest('[data-shop-nav-next]');
+      if (navNext) {
+        var track = root.querySelector('[data-shop-nav]');
+        if (track) track.scrollBy({ left: track.clientWidth * 0.7, behavior: 'smooth' });
+      }
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') closeDrawer();
+    });
+
+    window.addEventListener('popstate', function () {
+      render(window.location.href, false);
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Shop Grid",
+  "tag": "section",
+  "class": "bytefied-shop-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show collection title",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "label": "Title max size",
+      "default": 40
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show collection description",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Trust bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust",
+      "label": "Show the trust bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "trust_title",
+      "label": "Trust title",
+      "default": "Trusted by thousands of fragrance buyers"
+    },
+    {
+      "type": "text",
+      "id": "trust_sub",
+      "label": "Trust small line",
+      "default": "100% authentic and batch code verified"
+    },
+    {
+      "type": "url",
+      "id": "trust_link",
+      "label": "Trust bar link"
+    },
+    {
+      "type": "header",
+      "content": "Quick links"
+    },
+    {
+      "type": "link_list",
+      "id": "nav_menu",
+      "label": "Link row menu",
+      "info": "Optional. Shows a scrollable row of collection links under the title."
+    },
+    {
+      "type": "header",
+      "content": "Grid"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Section background",
+      "options": [
+        { "value": "white", "label": "White" },
+        { "value": "grey", "label": "Light grey" }
+      ],
+      "default": "white"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "label": "Products per page",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 3,
+      "max": 5,
+      "step": 1,
+      "label": "Columns on desktop",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Columns on tablet",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "Columns on mobile",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap between cards",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "sidebar_width",
+      "min": 200,
+      "max": 320,
+      "step": 10,
+      "unit": "px",
+      "label": "Sidebar width",
+      "default": 240
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Show the product count",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "load_more_label",
+      "label": "Load more label",
+      "default": "Load more"
+    },
+    {
+      "type": "header",
+      "content": "Card details"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show brand name",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show price",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show star rating",
+      "info": "Pulls from the reviews metafield. It stays hidden on products with no reviews yet.",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#EFBF04"
+    },
+    {
+      "type": "checkbox",
+      "id": "hover_second_image",
+      "label": "Swap to the second image on hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 20,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 20,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop Grid",
+      "category": "Bytefied"
+    }
+  ]
+}
+{% endschema %}

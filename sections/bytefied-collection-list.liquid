@@ -1,0 +1,1072 @@
+{%- liquid
+  assign scheme = section.settings.color_scheme
+-%}
+
+{% style %}
+  #BCL-{{ section.id }} {
+    --bcl-black: #1c1a17;
+    --bcl-white: #ffffff;
+    --bcl-grey: #f5f5f4;
+    --bcl-border: #e5e5e3;
+    --bcl-muted: #6b6b68;
+    --bcl-font: 'Geist', 'Geist Sans', 'GeistVF', -apple-system, system-ui, sans-serif;
+
+    {% if scheme == 'grey' %}
+      --bcl-bg: #f5f5f4;
+    {% else %}
+      --bcl-bg: #ffffff;
+    {% endif %}
+
+    --bcl-gap: {{ section.settings.grid_gap }}px;
+    --bcl-radius: {{ section.settings.corner_radius }}px;
+
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #fafafb !important;
+    color: var(--bcl-black);
+    font-family: var(--bcl-font);
+
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  #BCL-{{ section.id }},
+  #BCL-{{ section.id }} * {
+    font-family: var(--bcl-font) !important;
+  }
+
+  #BCL-{{ section.id }} .container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  #BCL-{{ section.id }} .bcl__head {
+    margin: 0 0 {{ section.settings.title_gap }}px;
+    text-align: {{ section.settings.title_alignment }};
+  }
+
+  #BCL-{{ section.id }} .bcl__section-title {
+    margin: 0;
+    font-size: clamp(1.5rem, 3vw, {{ section.settings.title_size | divided_by: 16.0 }}rem);
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: var(--bcl-black);
+  }
+
+  #BCL-{{ section.id }} .bcl__section-sub {
+    margin: 12px 0 0;
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--bcl-muted);
+  }
+
+  #BCL-{{ section.id }} .bcl__section-sub p {
+    margin: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  /* Grid */
+  #BCL-{{ section.id }} .bcl__grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--bcl-gap);
+  }
+
+  /* Item */
+  #BCL-{{ section.id }} .bcl__item {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: var(--bcl-radius);
+    background-color: var(--bcl-grey);
+    border: 1px solid var(--bcl-border);
+    text-decoration: none;
+    isolation: isolate;
+    transition: box-shadow 0.35s ease, transform 0.35s ease, border-color 0.35s ease;
+  }
+
+  #BCL-{{ section.id }} .bcl__item:hover {
+    border-color: #d8d8d5;
+    box-shadow: 0 16px 34px rgba(28, 26, 23, 0.12);
+    transform: translateY(-3px);
+  }
+
+  #BCL-{{ section.id }} .bcl__item:focus-visible {
+    outline: 2px solid var(--bcl-black);
+    outline-offset: 3px;
+  }
+
+  #BCL-{{ section.id }} .bcl__media {
+    position: relative;
+    width: 100%;
+    display: block;
+    background-color: var(--bcl-grey);
+  }
+
+  #BCL-{{ section.id }} .bcl__media img,
+  #BCL-{{ section.id }} .bcl__media svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  #BCL-{{ section.id }} .bcl__item:hover .bcl__media img {
+    transform: scale(1.05);
+  }
+
+  #BCL-{{ section.id }} .bcl__img--mobile {
+    display: none;
+  }
+
+  #BCL-{{ section.id }} .bcl__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Content */
+  #BCL-{{ section.id }} .bcl__content {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(20px, 3.4vw, 52px);
+    box-sizing: border-box;
+    gap: 0;
+  }
+
+  #BCL-{{ section.id }} .bcl__eyebrow,
+  #BCL-{{ section.id }} .bcl__title,
+  #BCL-{{ section.id }} .bcl__sub {
+    margin: 0;
+    max-width: 30ch;
+  }
+
+  #BCL-{{ section.id }} .bcl__eyebrow {
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0.02em;
+  }
+
+  #BCL-{{ section.id }} .bcl__title {
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+  }
+
+  #BCL-{{ section.id }} .bcl__sub {
+    font-weight: 400;
+    line-height: 1.35;
+  }
+
+  #BCL-{{ section.id }} .bcl__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 26px;
+    border-radius: 2px;
+    border: 1px solid transparent;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: background-color 0.28s ease, color 0.28s ease, border-color 0.28s ease;
+  }
+
+  #BCL-{{ section.id }} .bcl__btn--white {
+    background-color: var(--bcl-white);
+    color: var(--bcl-black);
+    border-color: var(--bcl-white);
+  }
+
+  #BCL-{{ section.id }} .bcl__item:hover .bcl__btn--white {
+    background-color: var(--bcl-grey);
+    border-color: var(--bcl-grey);
+  }
+
+  #BCL-{{ section.id }} .bcl__btn--black {
+    background-color: var(--bcl-black);
+    color: var(--bcl-white);
+    border-color: var(--bcl-black);
+  }
+
+  #BCL-{{ section.id }} .bcl__item:hover .bcl__btn--black {
+    background-color: #3a3734;
+    border-color: #3a3734;
+  }
+
+  #BCL-{{ section.id }} .bcl__btn--outline {
+    background-color: transparent;
+    color: inherit;
+    border-color: currentColor;
+  }
+
+  #BCL-{{ section.id }} .bcl__item:hover .bcl__btn--outline {
+    background-color: rgba(255, 255, 255, 0.14);
+  }
+
+  /* Animation feel */
+  #BCL-{{ section.id }} .bcl__reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.65s cubic-bezier(0.22, 0.61, 0.36, 1),
+                transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1),
+                box-shadow 0.35s ease, border-color 0.35s ease;
+  }
+
+  #BCL-{{ section.id }}.is-visible .bcl__reveal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #BCL-{{ section.id }}.is-visible .bcl__item:nth-child(1) { transition-delay: 0.04s; }
+  #BCL-{{ section.id }}.is-visible .bcl__item:nth-child(2) { transition-delay: 0.1s; }
+  #BCL-{{ section.id }}.is-visible .bcl__item:nth-child(3) { transition-delay: 0.16s; }
+  #BCL-{{ section.id }}.is-visible .bcl__item:nth-child(4) { transition-delay: 0.22s; }
+  #BCL-{{ section.id }}.is-visible .bcl__item:nth-child(5) { transition-delay: 0.28s; }
+  #BCL-{{ section.id }}.is-visible .bcl__item:nth-child(6) { transition-delay: 0.34s; }
+  #BCL-{{ section.id }}.is-visible .bcl__item:nth-child(7) { transition-delay: 0.4s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #BCL-{{ section.id }} .bcl__reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    #BCL-{{ section.id }} .bcl__item:hover {
+      transform: none;
+    }
+    #BCL-{{ section.id }} .bcl__item:hover .bcl__media img {
+      transform: none;
+    }
+  }
+
+  /* Per block rules */
+  {%- for block in section.blocks -%}
+    {%- liquid
+      assign b = block.settings
+
+      assign span = 12
+      assign tspan = 12
+      case b.width
+        when 'two_thirds'
+          assign span = 8
+          assign tspan = 12
+        when 'half'
+          assign span = 6
+          assign tspan = 6
+        when 'third'
+          assign span = 4
+          assign tspan = 6
+        when 'quarter'
+          assign span = 3
+          assign tspan = 6
+      endcase
+
+      assign ratio = '2.4 / 1'
+      case b.ratio
+        when 'banner'
+          assign ratio = '2 / 1'
+        when 'video'
+          assign ratio = '16 / 9'
+        when 'card'
+          assign ratio = '3 / 2'
+        when 'square'
+          assign ratio = '1 / 1'
+        when 'portrait'
+          assign ratio = '4 / 5'
+      endcase
+
+      assign m_ratio = ratio
+      case b.mobile_ratio
+        when 'wide'
+          assign m_ratio = '2.4 / 1'
+        when 'banner'
+          assign m_ratio = '2 / 1'
+        when 'video'
+          assign m_ratio = '16 / 9'
+        when 'card'
+          assign m_ratio = '3 / 2'
+        when 'square'
+          assign m_ratio = '1 / 1'
+        when 'portrait'
+          assign m_ratio = '4 / 5'
+      endcase
+
+      assign fg = '#ffffff'
+      assign ov_rgb = '0, 0, 0'
+      if b.text_color == 'dark'
+        assign fg = '#1c1a17'
+        assign ov_rgb = '255, 255, 255'
+      endif
+
+      assign o = b.overlay_opacity | divided_by: 100.0
+      assign o_soft = b.overlay_opacity | times: 0.75 | divided_by: 100.0
+
+      assign align_items = 'flex-start'
+      assign text_align = 'left'
+      if b.content_x == 'center'
+        assign align_items = 'center'
+        assign text_align = 'center'
+      elsif b.content_x == 'right'
+        assign align_items = 'flex-end'
+        assign text_align = 'right'
+      endif
+
+      assign justify = 'center'
+      if b.content_y == 'top'
+        assign justify = 'flex-start'
+      elsif b.content_y == 'bottom'
+        assign justify = 'flex-end'
+      endif
+    -%}
+
+    #BCL-{{ section.id }} .bcl__item--{{ block.id }} {
+      grid-column: span {{ span }};
+    }
+
+    #BCL-{{ section.id }} .bcl__item--{{ block.id }} .bcl__media {
+      aspect-ratio: {{ ratio }};
+      {% if b.min_height > 0 %}min-height: {{ b.min_height }}px;{% endif %}
+    }
+
+    #BCL-{{ section.id }} .bcl__item--{{ block.id }} .bcl__overlay {
+      {% case b.overlay_direction %}
+        {% when 'left' %}
+          background: linear-gradient(
+            to right,
+            rgba({{ ov_rgb }}, {{ o }}) 0%,
+            rgba({{ ov_rgb }}, {{ o_soft }}) 45%,
+            rgba({{ ov_rgb }}, 0) 88%
+          );
+        {% when 'bottom' %}
+          background: linear-gradient(
+            to top,
+            rgba({{ ov_rgb }}, {{ o }}) 0%,
+            rgba({{ ov_rgb }}, {{ o_soft }}) 45%,
+            rgba({{ ov_rgb }}, 0) 90%
+          );
+        {% else %}
+          background: rgba({{ ov_rgb }}, {{ o }});
+      {% endcase %}
+    }
+
+    #BCL-{{ section.id }} .bcl__item--{{ block.id }} .bcl__content {
+      align-items: {{ align_items }};
+      justify-content: {{ justify }};
+      text-align: {{ text_align }};
+      color: {{ fg }};
+    }
+
+    #BCL-{{ section.id }} .bcl__item--{{ block.id }} .bcl__eyebrow {
+      font-size: {{ b.eyebrow_size }}px;
+      color: {{ fg }};
+      margin-bottom: 10px;
+    }
+
+    #BCL-{{ section.id }} .bcl__item--{{ block.id }} .bcl__title {
+      font-size: {{ b.heading_size }}px;
+      color: {{ fg }};
+      text-transform: {% if b.uppercase_heading %}uppercase{% else %}none{% endif %};
+    }
+
+    #BCL-{{ section.id }} .bcl__item--{{ block.id }} .bcl__sub {
+      font-size: {{ b.sub_size }}px;
+      color: {{ fg }};
+      margin-top: 12px;
+      opacity: 0.92;
+    }
+
+    #BCL-{{ section.id }} .bcl__item--{{ block.id }} .bcl__btn {
+      margin-top: {{ b.button_gap }}px;
+      align-self: {{ align_items }};
+    }
+
+    @media screen and (max-width: 989px) {
+      #BCL-{{ section.id }} .bcl__item--{{ block.id }} {
+        grid-column: span {{ tspan }};
+      }
+
+      #BCL-{{ section.id }} .bcl__item--{{ block.id }} .bcl__eyebrow {
+        font-size: max(12px, {{ b.eyebrow_size | times: 0.86 | round }}px);
+      }
+
+      #BCL-{{ section.id }} .bcl__item--{{ block.id }} .bcl__title {
+        font-size: max(20px, {{ b.heading_size | times: 0.78 | round }}px);
+      }
+
+      #BCL-{{ section.id }} .bcl__item--{{ block.id }} .bcl__sub {
+        font-size: max(14px, {{ b.sub_size | times: 0.86 | round }}px);
+      }
+    }
+
+    @media screen and (max-width: 749px) {
+      #BCL-{{ section.id }} .bcl__item--{{ block.id }} {
+        grid-column: span 12;
+      }
+
+      #BCL-{{ section.id }} .bcl__item--{{ block.id }} .bcl__media {
+        aspect-ratio: {{ m_ratio }};
+        {% if b.min_height > 0 %}min-height: {{ b.min_height | times: 0.7 | round }}px;{% endif %}
+      }
+
+      #BCL-{{ section.id }} .bcl__item--{{ block.id }} .bcl__eyebrow {
+        font-size: max(12px, {{ b.eyebrow_size | times: 0.8 | round }}px);
+        margin-bottom: 8px;
+      }
+
+      #BCL-{{ section.id }} .bcl__item--{{ block.id }} .bcl__title {
+        font-size: max(20px, {{ b.heading_size | times: 0.58 | round }}px);
+      }
+
+      #BCL-{{ section.id }} .bcl__item--{{ block.id }} .bcl__sub {
+        font-size: max(14px, {{ b.sub_size | times: 0.78 | round }}px);
+        margin-top: 8px;
+      }
+
+      #BCL-{{ section.id }} .bcl__item--{{ block.id }} .bcl__btn {
+        margin-top: {{ b.button_gap | times: 0.7 | round }}px;
+      }
+    }
+  {%- endfor -%}
+
+  /* Mobile shared */
+  @media screen and (max-width: 749px) {
+    #BCL-{{ section.id }} {
+      --bcl-gap: {{ section.settings.grid_gap | times: 0.7 | round }}px;
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px;
+    }
+
+    #BCL-{{ section.id }} .bcl__content {
+      padding: 20px;
+    }
+
+    #BCL-{{ section.id }} .bcl__eyebrow,
+    #BCL-{{ section.id }} .bcl__title,
+    #BCL-{{ section.id }} .bcl__sub {
+      max-width: 100%;
+    }
+
+    #BCL-{{ section.id }} .bcl__img--mobile {
+      display: block;
+    }
+
+    #BCL-{{ section.id }} .bcl__has-mobile .bcl__img--desktop {
+      display: none;
+    }
+
+    #BCL-{{ section.id }} .bcl__btn {
+      min-height: 44px;
+      padding: 0 20px;
+      font-size: 12px;
+    }
+  }
+{% endstyle %}
+
+<section id="BCL-{{ section.id }}" class="bytefied-collection-list">
+  <div class="container">
+    {%- if section.settings.title != blank or section.settings.subtitle != blank -%}
+      <div class="bcl__head bcl__reveal">
+        {%- if section.settings.title != blank -%}
+          <h2 class="bcl__section-title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subtitle != blank -%}
+          <div class="bcl__section-sub">{{ section.settings.subtitle }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="bcl__grid">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          assign coll = collections[b.collection]
+
+          assign img = b.image
+          if img == blank and coll != blank
+            assign img = coll.image
+          endif
+          if img == blank and coll != blank
+            assign img = coll.products.first.featured_image
+          endif
+
+          assign link = b.link
+          if link == blank and coll != blank
+            assign link = coll.url
+          endif
+
+          assign heading = b.heading
+          if heading == blank and coll != blank
+            assign heading = coll.title
+          endif
+
+          assign img_alt = heading | strip_html | escape
+        -%}
+
+        <a
+          class="bcl__item bcl__item--{{ block.id }} bcl__reveal{% if b.mobile_image != blank %} bcl__has-mobile{% endif %}"
+          href="{{ link | default: '#' }}"
+          {{ block.shopify_attributes }}
+        >
+          <span class="bcl__media">
+            {%- if img != blank -%}
+              {{
+                img
+                | image_url: width: 2400
+                | image_tag:
+                  loading: 'lazy',
+                  sizes: '(max-width: 749px) 100vw, 1200px',
+                  widths: '600, 900, 1200, 1600, 2000, 2400',
+                  class: 'bcl__img--desktop',
+                  alt: img_alt
+              }}
+            {%- else -%}
+              {{ 'collection-1' | placeholder_svg_tag: 'bcl__img--desktop' }}
+            {%- endif -%}
+
+            {%- if b.mobile_image != blank -%}
+              {{
+                b.mobile_image
+                | image_url: width: 1400
+                | image_tag:
+                  loading: 'lazy',
+                  sizes: '100vw',
+                  widths: '420, 600, 800, 1000, 1400',
+                  class: 'bcl__img--mobile',
+                  alt: ''
+              }}
+            {%- endif -%}
+          </span>
+
+          <span class="bcl__overlay"></span>
+
+          <span class="bcl__content">
+            {%- if b.eyebrow != blank -%}
+              <span class="bcl__eyebrow">{{ b.eyebrow | escape }}</span>
+            {%- endif -%}
+
+            {%- if heading != blank -%}
+              <span class="bcl__title">{{ heading }}</span>
+            {%- endif -%}
+
+            {%- if b.subheading != blank -%}
+              <span class="bcl__sub">{{ b.subheading | escape }}</span>
+            {%- endif -%}
+
+            {%- if b.button_label != blank -%}
+              <span class="bcl__btn bcl__btn--{{ b.button_style }}">{{ b.button_label | escape }}</span>
+            {%- endif -%}
+          </span>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('BCL-{{ section.id }}');
+    if (!root) return;
+
+    if (!('IntersectionObserver' in window)) {
+      root.classList.add('is-visible');
+      return;
+    }
+
+    var io = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    io.observe(root);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Collection List",
+  "tag": "section",
+  "class": "bytefied-collection-list-section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Title",
+      "info": "Leave empty to hide the heading."
+    },
+    {
+      "type": "richtext",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "select",
+      "id": "title_alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading max size",
+      "default": 38
+    },
+    {
+      "type": "range",
+      "id": "title_gap",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Space under the heading",
+      "default": 44
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Section background",
+      "options": [
+        { "value": "white", "label": "White" },
+        { "value": "grey", "label": "Light grey" }
+      ],
+      "default": "grey"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 8,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Gap between blocks",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Corner radius",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "banner",
+      "name": "Block",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Source"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "The image, title and link fall back to this collection when the fields below are empty."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Overrides the collection image."
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile image",
+          "info": "Optional."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Overrides the collection link."
+        },
+        {
+          "type": "header",
+          "content": "Width and shape"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Block width",
+          "options": [
+            { "value": "full", "label": "Full width" },
+            { "value": "two_thirds", "label": "Two thirds" },
+            { "value": "half", "label": "Half" },
+            { "value": "third", "label": "One third" },
+            { "value": "quarter", "label": "One quarter" }
+          ],
+          "default": "full"
+        },
+        {
+          "type": "select",
+          "id": "ratio",
+          "label": "Shape on desktop",
+          "options": [
+            { "value": "wide", "label": "Wide banner" },
+            { "value": "banner", "label": "Banner" },
+            { "value": "video", "label": "Landscape" },
+            { "value": "card", "label": "Card" },
+            { "value": "square", "label": "Square" },
+            { "value": "portrait", "label": "Portrait" }
+          ],
+          "default": "wide"
+        },
+        {
+          "type": "select",
+          "id": "mobile_ratio",
+          "label": "Shape on mobile",
+          "options": [
+            { "value": "same", "label": "Same as desktop" },
+            { "value": "wide", "label": "Wide banner" },
+            { "value": "banner", "label": "Banner" },
+            { "value": "video", "label": "Landscape" },
+            { "value": "card", "label": "Card" },
+            { "value": "square", "label": "Square" },
+            { "value": "portrait", "label": "Portrait" }
+          ],
+          "default": "card"
+        },
+        {
+          "type": "range",
+          "id": "min_height",
+          "min": 0,
+          "max": 720,
+          "step": 20,
+          "unit": "px",
+          "label": "Minimum height",
+          "info": "Set to zero to let the shape decide.",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Small label above the title"
+        },
+        {
+          "type": "range",
+          "id": "eyebrow_size",
+          "min": 10,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Small label size",
+          "default": 14
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Title",
+          "info": "Falls back to the collection title."
+        },
+        {
+          "type": "range",
+          "id": "heading_size",
+          "min": 18,
+          "max": 88,
+          "step": 2,
+          "unit": "px",
+          "label": "Title size",
+          "default": 64
+        },
+        {
+          "type": "checkbox",
+          "id": "uppercase_heading",
+          "label": "Uppercase title",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subtitle"
+        },
+        {
+          "type": "range",
+          "id": "sub_size",
+          "min": 12,
+          "max": 40,
+          "step": 1,
+          "unit": "px",
+          "label": "Subtitle size",
+          "default": 30
+        },
+        {
+          "type": "header",
+          "content": "Button"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button style",
+          "options": [
+            { "value": "white", "label": "White button, black text" },
+            { "value": "black", "label": "Black button, white text" },
+            { "value": "outline", "label": "Outline button" }
+          ],
+          "default": "white"
+        },
+        {
+          "type": "range",
+          "id": "button_gap",
+          "min": 12,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "label": "Space above the button",
+          "default": 28
+        },
+        {
+          "type": "header",
+          "content": "Placement and overlay"
+        },
+        {
+          "type": "select",
+          "id": "content_x",
+          "label": "Content across",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "select",
+          "id": "content_y",
+          "label": "Content down",
+          "options": [
+            { "value": "top", "label": "Top" },
+            { "value": "middle", "label": "Middle" },
+            { "value": "bottom", "label": "Bottom" }
+          ],
+          "default": "middle"
+        },
+        {
+          "type": "select",
+          "id": "text_color",
+          "label": "Text color",
+          "options": [
+            { "value": "light", "label": "White text" },
+            { "value": "dark", "label": "Black text" }
+          ],
+          "default": "light"
+        },
+        {
+          "type": "select",
+          "id": "overlay_direction",
+          "label": "Overlay style",
+          "options": [
+            { "value": "uniform", "label": "Even" },
+            { "value": "left", "label": "Stronger on the left" },
+            { "value": "bottom", "label": "Stronger at the bottom" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "min": 0,
+          "max": 90,
+          "step": 5,
+          "unit": "%",
+          "label": "Overlay strength",
+          "default": 45
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection List",
+      "category": "Bytefied",
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "width": "full",
+            "ratio": "wide",
+            "mobile_ratio": "card",
+            "heading": "Fall Sale",
+            "heading_size": 64,
+            "subheading": "Up to 70% off",
+            "sub_size": 30,
+            "button_label": "Shop Now",
+            "content_x": "left",
+            "content_y": "middle",
+            "overlay_direction": "left",
+            "overlay_opacity": 45
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "width": "third",
+            "ratio": "card",
+            "mobile_ratio": "video",
+            "eyebrow": "Trending right now",
+            "eyebrow_size": 14,
+            "heading": "Best Sellers",
+            "heading_size": 28,
+            "uppercase_heading": false,
+            "sub_size": 16,
+            "button_label": "Shop Now",
+            "button_gap": 18,
+            "content_x": "center",
+            "content_y": "middle",
+            "overlay_direction": "uniform",
+            "overlay_opacity": 50
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "width": "third",
+            "ratio": "card",
+            "mobile_ratio": "video",
+            "eyebrow": "Try before the full bottle",
+            "eyebrow_size": 14,
+            "heading": "Samples From $6.99",
+            "heading_size": 28,
+            "uppercase_heading": false,
+            "sub_size": 16,
+            "button_label": "Shop Samples",
+            "button_gap": 18,
+            "content_x": "center",
+            "content_y": "middle",
+            "overlay_direction": "uniform",
+            "overlay_opacity": 50
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "width": "third",
+            "ratio": "card",
+            "mobile_ratio": "video",
+            "eyebrow": "Designer and niche",
+            "eyebrow_size": 14,
+            "heading": "Shop By Brand",
+            "heading_size": 28,
+            "uppercase_heading": false,
+            "sub_size": 16,
+            "button_label": "Browse Brands",
+            "button_gap": 18,
+            "content_x": "center",
+            "content_y": "middle",
+            "overlay_direction": "uniform",
+            "overlay_opacity": 50
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "width": "full",
+            "ratio": "banner",
+            "mobile_ratio": "card",
+            "heading": "Not sure where to start",
+            "heading_size": 34,
+            "subheading": "Sample it for a week, then buy the bottle you cannot stop wearing.",
+            "sub_size": 17,
+            "button_label": "Shop Samples",
+            "button_gap": 26,
+            "content_x": "center",
+            "content_y": "middle",
+            "overlay_direction": "uniform",
+            "overlay_opacity": 55
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "width": "full",
+            "ratio": "banner",
+            "mobile_ratio": "card",
+            "heading": "New Arrivals Every Week",
+            "heading_size": 46,
+            "subheading": "Fresh drops from the houses you already follow",
+            "sub_size": 18,
+            "button_label": "Shop New In",
+            "button_gap": 28,
+            "content_x": "left",
+            "content_y": "middle",
+            "overlay_direction": "left",
+            "overlay_opacity": 50
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

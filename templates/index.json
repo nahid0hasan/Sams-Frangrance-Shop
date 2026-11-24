@@ -1,0 +1,595 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "scent_hero_jDh8QN": {
+      "type": "scent-hero",
+      "name": "Scent Hero",
+      "settings": {
+        "background_image": "shopify://shop_images/51357999-6b49-4993-946e-3675551135b7.png",
+        "background_image_mobile": "shopify://shop_images/b520d497-0e47-4d4e-91eb-ca773eb2c6d3.png",
+        "focal_desktop": "center center",
+        "focal_mobile": "center bottom",
+        "overlay_opacity": 0,
+        "height_type": "fixed",
+        "height_px": 808,
+        "height_vh": 90,
+        "height_mobile": 800,
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "vertical_position": "center",
+        "eyebrow": "",
+        "heading": "",
+        "heading_tag": "h1",
+        "heading_size": 66,
+        "subheading_size": 22,
+        "subheading": "",
+        "content_width": 560,
+        "mobile_alignment": "left",
+        "button_label": "",
+        "button_link": "",
+        "button_label_2": "",
+        "button_link_2": ""
+      }
+    },
+    "benefits_CFRDkY": {
+      "type": "benefits",
+      "blocks": {
+        "benefit_xfBcpD": {
+          "type": "benefit",
+          "settings": {
+            "icon": "shield",
+            "label": "100% Authentic",
+            "note": "Batch code verified",
+            "link": ""
+          }
+        },
+        "benefit_HmaWkD": {
+          "type": "benefit",
+          "settings": {
+            "icon": "truck",
+            "label": "Ships In 2 Business Days",
+            "note": "Tracked on every order",
+            "link": ""
+          }
+        },
+        "benefit_wwEh9p": {
+          "type": "benefit",
+          "settings": {
+            "icon": "box",
+            "label": "Free Shipping Over $125",
+            "note": "Packed with care",
+            "link": ""
+          }
+        },
+        "benefit_jeMr94": {
+          "type": "benefit",
+          "settings": {
+            "icon": "vial",
+            "label": "Samples From $6.99",
+            "note": "Try before the full bottle",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "benefit_xfBcpD",
+        "benefit_HmaWkD",
+        "benefit_wwEh9p",
+        "benefit_jeMr94"
+      ],
+      "name": "Benefits Bar",
+      "settings": {
+        "title": "The Sams Fragrance Experience",
+        "subtitle": "",
+        "title_size": 22,
+        "title_gap": 20,
+        "color_scheme": "dark",
+        "icon_size": 46,
+        "label_size": 13,
+        "show_top_border": false,
+        "show_bottom_border": false,
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    },
+    "scent_product_6KatEj": {
+      "type": "scent-product",
+      "name": "Product Carousel",
+      "settings": {
+        "collection": "popular-fragrances-1",
+        "products_to_show": 10,
+        "title": "Chosen For You",
+        "subtitle": "",
+        "title_alignment": "center",
+        "title_size": 38,
+        "title_gap": 32,
+        "layout": "carousel",
+        "color_scheme": "white",
+        "columns_desktop": 4,
+        "columns_tablet": 3,
+        "mobile_columns": "peek",
+        "column_gap": 24,
+        "show_arrows": true,
+        "show_vendor": true,
+        "show_price": true,
+        "show_rating": true,
+        "hover_second_image": true,
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "bytefied_collection_list_JbPdki": {
+      "type": "bytefied-collection-list",
+      "blocks": {
+        "banner_eCp87h": {
+          "type": "banner",
+          "settings": {
+            "collection": "",
+            "image": "shopify://shop_images/8cc74aeb-3919-4dfe-bd90-2225c5ffa0f4.png",
+            "link": "shopify://collections/versace",
+            "width": "full",
+            "ratio": "wide",
+            "mobile_ratio": "portrait",
+            "min_height": 0,
+            "eyebrow": "",
+            "eyebrow_size": 14,
+            "heading": "Meet Eros",
+            "heading_size": 64,
+            "uppercase_heading": true,
+            "subheading": "Versace's boldest scents for him",
+            "sub_size": 30,
+            "button_label": "Shop Versace",
+            "button_style": "white",
+            "button_gap": 28,
+            "content_x": "left",
+            "content_y": "middle",
+            "text_color": "light",
+            "overlay_direction": "left",
+            "overlay_opacity": 45
+          }
+        },
+        "banner_a8FYcQ": {
+          "type": "banner",
+          "settings": {
+            "collection": "",
+            "image": "shopify://shop_images/6b96f15b-38b6-4c59-94c5-88a71e18d0ea.png",
+            "link": "shopify://collections/best-sellers",
+            "width": "third",
+            "ratio": "card",
+            "mobile_ratio": "card",
+            "min_height": 0,
+            "eyebrow": "Trending right now",
+            "eyebrow_size": 16,
+            "heading": "Best Sellers",
+            "heading_size": 28,
+            "uppercase_heading": false,
+            "subheading": "",
+            "sub_size": 16,
+            "button_label": "Shop Best Sellers",
+            "button_style": "white",
+            "button_gap": 18,
+            "content_x": "center",
+            "content_y": "middle",
+            "text_color": "light",
+            "overlay_direction": "uniform",
+            "overlay_opacity": 35
+          }
+        },
+        "banner_4RE4em": {
+          "type": "banner",
+          "settings": {
+            "collection": "",
+            "image": "shopify://shop_images/ChatGPT_Image_Sep_20_2026_04_29_36_PM.png",
+            "link": "shopify://collections/popular-niche-fragrances",
+            "width": "third",
+            "ratio": "card",
+            "mobile_ratio": "card",
+            "min_height": 0,
+            "eyebrow": "Our regulars' picks",
+            "eyebrow_size": 16,
+            "heading": "&nbsp;Picked For You&nbsp;",
+            "heading_size": 28,
+            "uppercase_heading": false,
+            "subheading": "",
+            "sub_size": 16,
+            "button_label": "Explore Now",
+            "button_style": "white",
+            "button_gap": 18,
+            "content_x": "center",
+            "content_y": "middle",
+            "text_color": "light",
+            "overlay_direction": "uniform",
+            "overlay_opacity": 35
+          }
+        },
+        "banner_WXij94": {
+          "type": "banner",
+          "settings": {
+            "collection": "",
+            "image": "shopify://shop_images/ChatGPT_Image_Sep_20_2026_05_16_08_PM.png",
+            "link": "shopify://collections/jean-paul-gaultier",
+            "width": "third",
+            "ratio": "card",
+            "mobile_ratio": "card",
+            "min_height": 0,
+            "eyebrow": "Bold and sensual",
+            "eyebrow_size": 16,
+            "heading": "&nbsp;Jean Paul Gaultier&nbsp;",
+            "heading_size": 28,
+            "uppercase_heading": false,
+            "subheading": "",
+            "sub_size": 16,
+            "button_label": "Shop the Brand",
+            "button_style": "white",
+            "button_gap": 18,
+            "content_x": "center",
+            "content_y": "middle",
+            "text_color": "light",
+            "overlay_direction": "uniform",
+            "overlay_opacity": 35
+          }
+        },
+        "banner_D3CqBy": {
+          "type": "banner",
+          "settings": {
+            "collection": "",
+            "image": "shopify://shop_images/ChatGPT_Image_Sep_20_2026_05_25_50_PM.png",
+            "link": "/collections/all?sort_by=created-descending",
+            "width": "full",
+            "ratio": "banner",
+            "mobile_ratio": "portrait",
+            "min_height": 0,
+            "eyebrow": "",
+            "eyebrow_size": 14,
+            "heading": "New Arrivals Every Week&nbsp;",
+            "heading_size": 46,
+            "uppercase_heading": true,
+            "subheading": "Fresh bottles land in store every single week",
+            "sub_size": 18,
+            "button_label": "Shop New Arrivals",
+            "button_style": "white",
+            "button_gap": 28,
+            "content_x": "left",
+            "content_y": "middle",
+            "text_color": "light",
+            "overlay_direction": "left",
+            "overlay_opacity": 35
+          }
+        }
+      },
+      "block_order": [
+        "banner_eCp87h",
+        "banner_a8FYcQ",
+        "banner_4RE4em",
+        "banner_WXij94",
+        "banner_D3CqBy"
+      ],
+      "name": "Collection List",
+      "settings": {
+        "title": "",
+        "subtitle": "",
+        "title_alignment": "center",
+        "title_size": 38,
+        "title_gap": 44,
+        "color_scheme": "grey",
+        "grid_gap": 24,
+        "corner_radius": 10,
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "178990427498515eda": {
+      "type": "_blocks",
+      "blocks": {
+        "judge_me_reviews_reviews_grid_widget_Gp7tkK": {
+          "type": "shopify://apps/judge-me-reviews/blocks/reviews_grid_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "show_sample_reviews": true,
+            "review_selection": "product_reviews",
+            "products": [],
+            "filter_pinned": false,
+            "filter_featured": false,
+            "filter_custom_tags": "",
+            "show_media_only": true,
+            "display_order": "media_first",
+            "card_grouping": "per_media",
+            "columns_desktop": 3,
+            "rows_desktop": 3,
+            "columns_mobile": "2",
+            "rows_mobile": 6,
+            "show_stars": true,
+            "show_reviewer_name": true,
+            "show_review_title_on_hover_desktop": true,
+            "max_width": 1100,
+            "corner_styling": "soft",
+            "card_spacing": "medium",
+            "header_text_color": "#000000",
+            "star_and_reviewer_name_color": "#f9f9f9",
+            "drop_shadow_color": "#000000",
+            "overlay_and_background_color": "#000000",
+            "content_color": "#f9f9f9",
+            "header_text": "46,000+ Happy Customers",
+            "show_average_rating": true,
+            "rating_display": "show_avg_text"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_reviews_grid_widget_Gp7tkK"
+      ],
+      "disabled": true,
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "background_media": "none",
+        "background_color": "",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_color": "",
+        "border_radius": 0,
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "bytefied_faq_PWNzKa": {
+      "type": "bytefied-faq",
+      "blocks": {
+        "faq_G7ME7L": {
+          "type": "faq",
+          "settings": {
+            "question": "Are your fragrances authentic?",
+            "answer": "<p>Yes. Every bottle is sourced from authorized distributors and verified by batch code before it leaves our shelf. If you ever want the batch details for an order, message us and we will send them over.</p>"
+          }
+        },
+        "faq_6mphrQ": {
+          "type": "faq",
+          "settings": {
+            "question": "Why are your prices lower than retail?",
+            "answer": "<p>We buy at wholesale and keep our margins thin instead of paying for department store counters and heavy advertising. Same bottle, same juice, smaller price tag.</p>"
+          }
+        },
+        "faq_KfhXX8": {
+          "type": "faq",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "<p>Orders leave our shop within two business days and most parcels land in two to four days after that. Orders over $125 ship free and every order comes with tracking.</p>"
+          }
+        },
+        "faq_tnczdW": {
+          "type": "faq",
+          "settings": {
+            "question": "What exactly is a sample or decant?",
+            "answer": "<p>It is a small spray vial filled from the original bottle, so you get the real fragrance in a size you can carry and test for a week. Samples start at $6.99 and it is the cheapest way to find out if a scent suits you.</p>"
+          }
+        },
+        "faq_XKfgVB": {
+          "type": "faq",
+          "settings": {
+            "question": "I am new to fragrances. Where should I start?",
+            "answer": "<p>Pick three or four samples across different families, something fresh, something sweet and something woody. Wear each one for a full day and see which one people mention. Then come back for the full bottle of the winner.</p>"
+          }
+        },
+        "faq_7f6h8x": {
+          "type": "faq",
+          "settings": {
+            "question": "Will the fragrance last all day?",
+            "answer": "<p>That depends on the concentration and your skin. An Eau de Parfum or Extrait usually carries six to ten hours, an Eau de Toilette lasts less. Spray on moisturized skin at the pulse points and it will hold much longer.</p>"
+          }
+        },
+        "faq_6FjJP4": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I track my order?",
+            "answer": "<p>Yes. A tracking link goes to your email as soon as the label is created. If it has not arrived, check your spam folder and then message us and we will resend it.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_G7ME7L",
+        "faq_6mphrQ",
+        "faq_KfhXX8",
+        "faq_tnczdW",
+        "faq_XKfgVB",
+        "faq_7f6h8x",
+        "faq_6FjJP4"
+      ],
+      "name": "FAQ",
+      "settings": {
+        "title": "Frequently Asked Questions",
+        "subtitle": "",
+        "title_alignment": "center",
+        "title_size": 38,
+        "title_gap": 44,
+        "color_scheme": "white",
+        "list_width": 1000,
+        "question_size": 16,
+        "answer_size": 16,
+        "row_padding": 20,
+        "open_first": false,
+        "close_others": true,
+        "foot_text": "",
+        "button_label": "",
+        "button_link": "",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "bytefied_video_grid_TxKD9U": {
+      "type": "bytefied-video-grid",
+      "blocks": {
+        "video_KJhjYE": {
+          "type": "video",
+          "settings": {
+            "video": "shopify://files/videos/copy_6CCF1D53-0423-4BDE-BD40-D8BEAEA6065A.mov",
+            "label": "",
+            "caption": "",
+            "date": "",
+            "link": ""
+          }
+        },
+        "video_FH9NBb": {
+          "type": "video",
+          "settings": {
+            "video": "shopify://files/videos/copy_186F5125-7D25-42E8-B8FE-AF5724588B46_79036037-b367-433f-a880-e216cbeeabba.mov",
+            "label": "",
+            "caption": "",
+            "date": "",
+            "link": ""
+          }
+        },
+        "video_APq68j": {
+          "type": "video",
+          "settings": {
+            "video": "shopify://files/videos/copy_B27BF32C-95E0-470E-A1DF-6BF04282FA49.mov",
+            "label": "",
+            "caption": "",
+            "date": "",
+            "link": ""
+          }
+        },
+        "video_NpMxyh": {
+          "type": "video",
+          "settings": {
+            "video": "shopify://files/videos/ssstik.io_@benry.fragrances_1778540758890.mp4",
+            "label": "",
+            "caption": "",
+            "date": "",
+            "link": ""
+          }
+        },
+        "video_egXAAC": {
+          "type": "video",
+          "settings": {
+            "video": "shopify://files/videos/copy_186F5125-7D25-42E8-B8FE-AF5724588B46.mov",
+            "label": "",
+            "caption": "",
+            "date": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "video_KJhjYE",
+        "video_FH9NBb",
+        "video_APq68j",
+        "video_NpMxyh",
+        "video_egXAAC"
+      ],
+      "name": "Video grid",
+      "settings": {
+        "title": "Follow us on Instagram",
+        "subtitle": "",
+        "title_alignment": "center",
+        "title_size": 36,
+        "title_gap": 30,
+        "handle": "@samsfragranceshop",
+        "handle_link": "https://www.instagram.com/samsfragranceshop/",
+        "avatar": "shopify://shop_images/648665699_18122219929595104_8575185733860652976_n.jpg",
+        "handle_in_title": true,
+        "handle_alignment": "left",
+        "link_label": "View on Instagram",
+        "columns_desktop": 5,
+        "columns_tablet": "3",
+        "columns_mobile": "2",
+        "aspect_ratio": "9 / 16",
+        "gap": 24,
+        "radius": 6,
+        "autoplay_mobile": true,
+        "color_scheme": "grey",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "1790230723572a7dc1": {
+      "type": "_blocks",
+      "blocks": {
+        "judge_me_reviews_medals_7gbbpD": {
+          "type": "shopify://apps/judge-me-reviews/blocks/medals/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {}
+        },
+        "judge_me_reviews_all_reviews_text_a9RG3Q": {
+          "type": "shopify://apps/judge-me-reviews/blocks/all_reviews_text/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {}
+        },
+        "judge_me_reviews_verified_badge_dMiwrK": {
+          "type": "shopify://apps/judge-me-reviews/blocks/verified_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {}
+        },
+        "judge_me_reviews_featured_carousel_QGHfGG": {
+          "type": "shopify://apps/judge-me-reviews/blocks/featured_carousel/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "maxwidth": 1080
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_medals_7gbbpD",
+        "judge_me_reviews_all_reviews_text_a9RG3Q",
+        "judge_me_reviews_verified_badge_dMiwrK",
+        "judge_me_reviews_featured_carousel_QGHfGG"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "background_media": "none",
+        "background_color": "",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_color": "",
+        "border_radius": 0,
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      }
+    }
+  },
+  "order": [
+    "scent_hero_jDh8QN",
+    "benefits_CFRDkY",
+    "scent_product_6KatEj",
+    "bytefied_collection_list_JbPdki",
+    "178990427498515eda",
+    "bytefied_faq_PWNzKa",
+    "bytefied_video_grid_TxKD9U",
+    "1790230723572a7dc1"
+  ]
+}

@@ -1,0 +1,26 @@
+{%- comment -%}
+  Decant disclosure shown above the size picker on the Bytefied product page.
+  Accepts:
+  - heading: {String} small label above the text (optional)
+  - text: {String} inline richtext of the notice
+  - hidden: {Boolean} start hidden (selected variant is a full bottle etc.)
+{%- endcomment -%}
+<aside class="bp__row bp__notice-decant" data-bp-decant-notice {% if hidden %}hidden{% endif %}>
+  {%- if heading != blank -%}
+    <p class="bp__notice-decant-head">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M9.4 3.4h5.2v3l-1 1v11.4a2.6 2.6 0 01-5.2 0V7.4l1-1z"/><path d="M8.4 12.4h7.2"/>
+      </svg>
+      {{ heading | escape }}
+    </p>
+  {%- endif -%}
+  <p class="bp__notice-decant-text">{{ text }}</p>
+</aside>

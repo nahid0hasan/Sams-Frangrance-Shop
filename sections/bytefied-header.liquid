@@ -1,0 +1,2001 @@
+{%- liquid
+  assign sid = section.id
+  assign menu = linklists[section.settings.menu]
+  assign announcements = section.blocks | where: 'type', 'announcement'
+  assign megas = section.blocks | where: 'type', 'mega'
+  if section.settings.color_scheme == 'dark'
+    assign h_bg = '#1c1a17'
+    assign h_fg = '#ffffff'
+    assign h_line = 'rgba(255,255,255,0.14)'
+    assign h_soft = 'rgba(255,255,255,0.68)'
+  else
+    assign h_bg = '#ffffff'
+    assign h_fg = '#1c1a17'
+    assign h_line = '#e5e5e3'
+    assign h_soft = '#6b6b68'
+  endif
+-%}
+
+{% style %}
+  /* Cart drawer overlays the page instead of pushing it aside.
+     base.css gives .page-wrapper--drawer-open a margin equal to the drawer
+     width on 990px and up, which shrinks the whole site while the drawer is
+     open. Killed here so the drawer slides over the content. */
+  .page-wrapper--drawer-open {
+    margin-inline-end: 0 !important;
+  }
+
+  .page-wrapper--drawer-open shopify-account::part(dialog) {
+    translate: none !important;
+  }
+
+  /* The drawer panel sits at --layer-sticky (8) while this header is at 60,
+     so the sticky header would paint over the open drawer. Drop the header
+     under it for as long as any drawer is open. */
+  body:has(theme-drawer[open]) #shopify-section-{{ sid }},
+  body:has(theme-drawer[open]) #Hdr-{{ sid }} {
+    z-index: 1 !important;
+  }
+
+  #Hdr-{{ sid }} {
+    --h-black: #1c1a17;
+    --h-white: #ffffff;
+    --h-grey: #f5f5f4;
+    --h-border: #e5e5e3;
+    --h-muted: #6b6b68;
+    --h-bg: {{ h_bg }};
+    --h-fg: {{ h_fg }};
+    --h-line: {{ h_line }};
+    --h-soft: {{ h_soft }};
+    --h-font: 'Geist', 'Geist Sans', 'GeistVF', -apple-system, system-ui, sans-serif;
+    --h-width: {{ section.settings.container_width }}px;
+
+    display: block;
+    width: 100%;
+    font-family: var(--h-font);
+    position: relative;
+    z-index: 50;
+  }
+
+  #Hdr-{{ sid }},
+  #Hdr-{{ sid }} * {
+    font-family: var(--h-font) !important;
+    box-sizing: border-box;
+  }
+
+  #Hdr-{{ sid }} [hidden] { display: none !important; }
+
+  #Hdr-{{ sid }} .container {
+    max-width: 1440px !important;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* Announcement */
+  #Hdr-{{ sid }} .h__bar {
+    width: 100%;
+    padding: 0 20px;
+    background-color: {{ section.settings.bar_bg }};
+    color: {{ section.settings.bar_fg }};
+    overflow: hidden;
+  }
+
+  #Hdr-{{ sid }} .h__bar-track {
+    position: relative;
+    height: 40px;
+  }
+
+  #Hdr-{{ sid }} .h__bar-item {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: inherit;
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #Hdr-{{ sid }} .h__bar-item.is-active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  #Hdr-{{ sid }} a.h__bar-item:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* Header shell */
+  #Hdr-{{ sid }} .h__shell {
+    position: relative;
+    width: 100%;
+    padding: 0 20px;
+    background-color: var(--h-bg);
+    color: var(--h-fg);
+    border-bottom: 1px solid var(--h-line);
+    transition: box-shadow 0.3s ease;
+  }
+
+  #Hdr-{{ sid }}.is-scrolled .h__shell {
+    box-shadow: 0 6px 24px rgba(28, 26, 23, 0.08);
+  }
+
+  #Hdr-{{ sid }} .h__row {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    min-height: {{ section.settings.header_height }}px;
+  }
+
+  #Hdr-{{ sid }} .h__logo {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    color: var(--h-fg);
+    text-decoration: none;
+  }
+
+  #Hdr-{{ sid }} .h__logo img {
+    display: block;
+    width: {{ section.settings.logo_width }}px;
+    height: auto;
+  }
+
+  #Hdr-{{ sid }} .h__logo-text {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  /* Desktop nav */
+  #Hdr-{{ sid }} .h__nav {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: {{ section.settings.menu_position }};
+  }
+
+  #Hdr-{{ sid }} .h__menu {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 0 {{ section.settings.menu_gap }}px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  #Hdr-{{ sid }} .h__item {
+    position: static;
+    display: flex;
+    align-items: center;
+  }
+
+  #Hdr-{{ sid }} .h__item--drop {
+    position: relative;
+  }
+
+  #Hdr-{{ sid }} .h__link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    min-height: {{ section.settings.header_height }}px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--h-fg);
+    font-size: {{ section.settings.menu_size }}px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: {% if section.settings.uppercase_menu %}uppercase{% else %}none{% endif %};
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  #Hdr-{{ sid }} .h__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(50% - 16px);
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  #Hdr-{{ sid }} .h__item:hover > .h__link::after,
+  #Hdr-{{ sid }} .h__item.is-open > .h__link::after,
+  #Hdr-{{ sid }} .h__link[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+
+  #Hdr-{{ sid }} .h__caret {
+    width: 12px;
+    height: 12px;
+    transition: transform 0.25s ease;
+  }
+
+  #Hdr-{{ sid }} .h__item.is-open .h__caret { transform: rotate(180deg); }
+
+  /* Dropdown */
+  #Hdr-{{ sid }} .h__drop {
+    position: absolute;
+    top: 100%;
+    left: -18px;
+    min-width: 240px;
+    margin: 0;
+    padding: 14px 0;
+    list-style: none;
+    border: 1px solid var(--h-border);
+    border-radius: 0 0 8px 8px;
+    background-color: var(--h-white);
+    box-shadow: 0 18px 40px rgba(28, 26, 23, 0.12);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
+    z-index: 30;
+  }
+
+  #Hdr-{{ sid }} .h__item.is-open > .h__drop {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  #Hdr-{{ sid }} .h__drop a {
+    display: block;
+    padding: 8px 22px;
+    color: var(--h-black);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s ease, padding-left 0.2s ease;
+  }
+
+  #Hdr-{{ sid }} .h__drop a:hover {
+    background-color: var(--h-grey);
+    padding-left: 26px;
+  }
+
+  #Hdr-{{ sid }} .h__drop-group {
+    padding: 6px 22px 2px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--h-muted);
+  }
+
+  /* Mega */
+  #Hdr-{{ sid }} .h__mega {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    padding: 36px 20px 40px;
+    border-top: 1px solid var(--h-border);
+    border-bottom: 1px solid var(--h-border);
+    background-color: var(--h-white);
+    color: var(--h-black);
+    box-shadow: 0 24px 48px rgba(28, 26, 23, 0.12);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+    z-index: 30;
+  }
+
+  #Hdr-{{ sid }} .h__item.is-open > .h__mega {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  #Hdr-{{ sid }} .h__mega-inner {
+    max-width: var(--h-width);
+    margin: 0 auto;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+  }
+
+  #Hdr-{{ sid }} .h__mega-cols {
+    display: grid;
+    grid-template-columns: repeat(var(--cols, 5), minmax(0, 1fr));
+    gap: 34px 28px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    align-content: start;
+  }
+
+  /* Ten columns at five across need room, so step down on narrower screens. */
+  @media screen and (max-width: 1180px) {
+    #Hdr-{{ sid }} .h__mega-cols {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (max-width: 980px) {
+    #Hdr-{{ sid }} .h__mega-cols {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  #Hdr-{{ sid }} .h__mega-title {
+    display: inline-block;
+    margin: 0 0 14px;
+    color: var(--h-black);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  #Hdr-{{ sid }} a.h__mega-title:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  #Hdr-{{ sid }} .h__mega-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  #Hdr-{{ sid }} .h__mega-list a {
+    color: var(--h-muted);
+    font-size: 14px;
+    text-decoration: none;
+    transition: color 0.2s ease, padding-left 0.2s ease;
+    text-transform: uppercase !important;
+  }
+
+  #Hdr-{{ sid }} .h__mega-list a:hover {
+    color: var(--h-black);
+    padding-left: 4px;
+  }
+
+  /* Icons */
+  #Hdr-{{ sid }} .h__icons {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  #Hdr-{{ sid }} .h__icon {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: var(--h-fg);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.22s ease;
+  }
+
+  #Hdr-{{ sid }} .h__icon:hover { background-color: var(--h-line); }
+
+  #Hdr-{{ sid }} .h__icon svg { width: 25px; height: 25px; }
+
+  #Hdr-{{ sid }} .h__count {
+    position: absolute;
+    top: 4px;
+    right: 2px;
+    min-width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    border-radius: 999px;
+    background-color: var(--h-fg);
+    color: var(--h-bg);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  #Hdr-{{ sid }} .h__count[data-count='0'] { display: none; }
+
+  /* On desktop the burger is hidden, so its wrapper is dropped too.
+     An empty flex item would still take a slot of the row gap and
+     push the logo away from the start of the container. */
+  #Hdr-{{ sid }} .h__left,
+  #Hdr-{{ sid }} .h__burger { display: none; }
+
+  #Hdr-{{ sid }} a:focus-visible,
+  #Hdr-{{ sid }} button:focus-visible,
+  #Hdr-{{ sid }} input:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  /* Search panel */
+  #Hdr-{{ sid }} .h__search {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    padding: 22px 20px 26px;
+    background-color: var(--h-white);
+    border-bottom: 1px solid var(--h-border);
+    box-shadow: 0 24px 48px rgba(28, 26, 23, 0.12);
+    color: var(--h-black);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
+    z-index: 40;
+  }
+
+  #Hdr-{{ sid }}.is-search-open .h__search {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  #Hdr-{{ sid }} .h__search-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 16px;
+    border: 1px solid var(--h-black);
+    border-radius: 4px;
+  }
+
+  #Hdr-{{ sid }} .h__search-form svg { width: 20px; height: 20px; flex: 0 0 auto; }
+
+  #Hdr-{{ sid }} .h__search-input {
+    flex: 1 1 auto;
+    min-height: 52px;
+    border: 0;
+    background: none;
+    color: var(--h-black);
+    font-size: 16px;
+    outline: none;
+  }
+
+  #Hdr-{{ sid }} .h__search-close {
+    border: 0;
+    background: none;
+    color: var(--h-black);
+    cursor: pointer;
+    padding: 6px;
+    display: inline-flex;
+  }
+
+  #Hdr-{{ sid }} .h__results {
+    max-width: 760px;
+    margin: 14px auto 0;
+  }
+
+  #Hdr-{{ sid }} .h__results-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  #Hdr-{{ sid }} .h__result {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    border-radius: 6px;
+    color: var(--h-black);
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  #Hdr-{{ sid }} .h__result:hover { background-color: var(--h-grey); }
+
+  #Hdr-{{ sid }} .h__result img {
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+    border: 1px solid var(--h-border);
+    border-radius: 4px;
+    background-color: #fafafb;
+    flex: 0 0 auto;
+  }
+
+  #Hdr-{{ sid }} .h__result-name { margin: 0; font-size: 14px; font-weight: 500; line-height: 1.35; }
+  #Hdr-{{ sid }} .h__result-price { margin: 3px 0 0; font-size: 13px; color: var(--h-muted); }
+
+  #Hdr-{{ sid }} .h__results-all {
+    display: inline-block;
+    margin-top: 12px;
+    color: var(--h-black);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  #Hdr-{{ sid }} .h__results-empty { margin: 0; font-size: 14px; color: var(--h-muted); }
+
+  /* Drawer */
+  #Hdr-{{ sid }} .h__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    background-color: rgba(28, 26, 23, 0.45);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s;
+  }
+
+  #Hdr-{{ sid }}.is-drawer-open .h__overlay { opacity: 1; visibility: visible; }
+
+  #Hdr-{{ sid }} .h__drawer {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    width: 88%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--h-grey);
+    color: var(--h-black);
+    transform: translateX(-102%);
+    transition: transform 0.36s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  #Hdr-{{ sid }}.is-drawer-open .h__drawer { transform: translateX(0); }
+
+  #Hdr-{{ sid }} .h__drawer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--h-border);
+  }
+
+  #Hdr-{{ sid }} .h__drawer-head .h__logo { color: var(--h-black); }
+  #Hdr-{{ sid }} .h__drawer-head .h__logo img { width: {{ section.settings.logo_width_mobile }}px; }
+
+  #Hdr-{{ sid }} .h__drawer-head .h__icon { color: var(--h-black); }
+  #Hdr-{{ sid }} .h__drawer-head .h__icon:hover { background-color: var(--h-border); }
+
+  #Hdr-{{ sid }} .h__drawer-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 8px 20px 20px;
+  }
+
+  #Hdr-{{ sid }} .h__m-list { margin: 0; padding: 0; list-style: none; }
+
+  #Hdr-{{ sid }} .h__m-item { border-bottom: 1px solid var(--h-border); }
+
+  #Hdr-{{ sid }} .h__m-link,
+  #Hdr-{{ sid }} .h__m-item > details > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    color: var(--h-black);
+    font-size: 17px;
+    font-weight: 700;
+    text-transform: {% if section.settings.uppercase_menu %}uppercase{% else %}none{% endif %};
+    text-decoration: none;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  #Hdr-{{ sid }} summary::-webkit-details-marker { display: none; }
+
+  #Hdr-{{ sid }} .h__m-item summary svg,
+  #Hdr-{{ sid }} .h__m-sub summary svg {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.25s ease;
+  }
+
+  #Hdr-{{ sid }} details[open] > summary svg { transform: rotate(180deg); }
+
+  #Hdr-{{ sid }} .h__m-children {
+    margin: 0 0 12px;
+    padding: 0 0 0 12px;
+    list-style: none;
+    border-left: 1px solid var(--h-border);
+  }
+
+  #Hdr-{{ sid }} .h__m-children a,
+  #Hdr-{{ sid }} .h__m-sub > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 0;
+    color: var(--h-black);
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  #Hdr-{{ sid }} .h__m-children .h__m-children a { color: var(--h-muted); font-size: 14px; }
+
+  /* A mega menu column that has a heading but no menu behind it */
+  #Hdr-{{ sid }} .h__m-cap {
+    display: block;
+    padding: 9px 0;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--h-muted);
+  }
+
+  #Hdr-{{ sid }} .h__drawer-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 20px;
+    border-top: 1px solid var(--h-border);
+    background-color: var(--h-white);
+  }
+
+  #Hdr-{{ sid }} .h__account-links { display: flex; flex-direction: column; gap: 10px; }
+
+  #Hdr-{{ sid }} .h__account-links a {
+    color: var(--h-black);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  #Hdr-{{ sid }} .h__socials { display: flex; gap: 4px; }
+
+  #Hdr-{{ sid }} .h__socials a {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--h-black);
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+  }
+
+  #Hdr-{{ sid }} .h__socials a:hover { background-color: var(--h-grey); }
+  #Hdr-{{ sid }} .h__socials svg { width: 18px; height: 18px; fill: currentColor; }
+
+  @media screen and (max-width: {{ section.settings.mobile_breakpoint }}px) {
+    #Hdr-{{ sid }} .h__nav,
+    #Hdr-{{ sid }} .h__icon--account { display: none; }
+
+    #Hdr-{{ sid }} .h__burger { display: inline-flex; }
+
+    #Hdr-{{ sid }} .h__row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 8px;
+      min-height: {{ section.settings.header_height_mobile }}px;
+    }
+
+    #Hdr-{{ sid }} .h__left { justify-self: start; display: flex; }
+    #Hdr-{{ sid }} .h__row > .h__logo { justify-self: center; }
+    #Hdr-{{ sid }} .h__icons { justify-self: end; gap: 0; }
+
+    #Hdr-{{ sid }} .h__logo img { width: {{ section.settings.logo_width_mobile }}px; }
+    #Hdr-{{ sid }} .h__logo-text { font-size: 18px; }
+
+    #Hdr-{{ sid }} .h__results-list { grid-template-columns: minmax(0, 1fr); }
+    #Hdr-{{ sid }} .h__search { padding: 14px 16px 18px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #Hdr-{{ sid }} *,
+    #Hdr-{{ sid }} *::after { transition: none !important; }
+  }
+{% endstyle %}
+
+{%- if section.settings.sticky != 'none' -%}
+  <style>
+    /* #header-group is only as tall as the header, so a sticky section
+       inside it has no room to stick. Dropping the wrapper from the box
+       tree makes .page-wrapper the containing block instead, which is
+       also what the stock theme header does. */
+    #header-group:has(#Hdr-{{ sid }}) {
+      display: contents;
+    }
+
+    #shopify-section-{{ sid }} {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      transition: transform 0.35s ease;
+    }
+    #shopify-section-{{ sid }}.is-hidden { transform: translateY(-100%); }
+  </style>
+{%- endif -%}
+
+<section
+  id="Hdr-{{ sid }}"
+  class="bytefied-header"
+  data-hdr
+  data-sticky="{{ section.settings.sticky }}"
+  data-search-url="{{ routes.predictive_search_url }}"
+  data-search-page="{{ routes.search_url }}"
+  data-money="{{ shop.money_format | strip_html | escape }}"
+>
+  {%- if announcements.size > 0 -%}
+    <div class="h__bar" role="region" aria-label="Announcements">
+      <div class="container">
+        <div class="h__bar-track" data-bar data-speed="{{ section.settings.bar_speed }}">
+          {%- for block in announcements -%}
+            {%- if block.settings.link != blank -%}
+              <a
+                class="h__bar-item{% if forloop.first %} is-active{% endif %}"
+                href="{{ block.settings.link }}"
+                {{ block.shopify_attributes }}
+              >
+                {{- block.settings.text | escape -}}
+              </a>
+            {%- else -%}
+              <p
+                class="h__bar-item{% if forloop.first %} is-active{% endif %}"
+                style="margin:0;"
+                {{ block.shopify_attributes }}
+              >
+                {{ block.settings.text | escape }}
+              </p>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  <header class="h__shell">
+    <div class="container">
+      <div class="h__row">
+        <div class="h__left">
+          <button
+            type="button"
+            class="h__icon h__burger"
+            data-drawer-open
+            aria-label="Open menu"
+            aria-expanded="false"
+            aria-controls="HdrDrawer-{{ sid }}"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <path d="M3.5 6.5h17M3.5 12h17M3.5 17.5h17"/>
+            </svg>
+          </button>
+        </div>
+
+        {%- capture logo_markup -%}
+          <a class="h__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
+            {%- if section.settings.logo != blank -%}
+              {%- assign logo_alt = section.settings.logo.alt | default: shop.name | escape -%}
+              {{ section.settings.logo | image_url: width: 600 | image_tag: loading: 'eager', widths: '200, 300, 400, 600', sizes: '240px', alt: logo_alt }}
+            {%- else -%}
+              <span class="h__logo-text">{{ shop.name }}</span>
+            {%- endif -%}
+          </a>
+        {%- endcapture -%}
+
+        {%- if request.page_type == 'index' -%}
+          <h1 style="margin:0;display:contents;">{{ logo_markup }}</h1>
+        {%- else -%}
+          {{ logo_markup }}
+        {%- endif -%}
+
+        <nav class="h__nav" aria-label="Main">
+          {%- if menu != blank -%}
+            <ul class="h__menu" role="list">
+              {%- for link in menu.links -%}
+                {%- liquid
+                  assign mega = null
+                  assign link_key = link.title | strip | downcase
+                  for m in megas
+                    assign m_key = m.settings.menu_item | strip | downcase
+                    if m_key == link_key
+                      assign mega = m
+                      break
+                    endif
+                  endfor
+
+                  assign is_mega = false
+                  if mega != null
+                    assign is_mega = true
+                  elsif section.settings.auto_mega and link.levels == 2
+                    assign is_mega = true
+                  endif
+
+                  assign has_children = false
+                  if link.links.size > 0
+                    assign has_children = true
+                  endif
+
+                  assign panel_id = 'HdrPanel-' | append: sid | append: '-' | append: forloop.index
+                -%}
+
+                {%- if has_children == false and mega == null -%}
+                  <li class="h__item">
+                    <a
+                      class="h__link"
+                      href="{{ link.url }}"
+                      {% if link.current %}
+                        aria-current="page"
+                      {% endif %}
+                    >
+                      {{- link.title | escape -}}
+                    </a>
+                  </li>
+
+                {%- elsif is_mega -%}
+                  {%- liquid
+                    assign cols = 5
+                    assign custom_cols = false
+                    if mega != null
+                      assign cols = mega.settings.columns
+                      # A single filled column slot switches the panel over to the
+                      # hand built columns and away from the menu's own children.
+                      for n in (1..10)
+                        assign t_key = 'title_' | append: n
+                        assign m_key = 'menu_' | append: n
+                        if mega.settings[t_key] != blank or mega.settings[m_key] != blank
+                          assign custom_cols = true
+                          break
+                        endif
+                      endfor
+                    endif
+                  -%}
+                  <li class="h__item h__item--mega" data-menu-item>
+                    <a
+                      class="h__link"
+                      href="{{ link.url }}"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      aria-controls="{{ panel_id }}"
+                      data-menu-trigger
+                      {% if link.current %}
+                        aria-current="page"
+                      {% endif %}
+                    >
+                      {{ link.title | escape }}
+                      {%- if section.settings.show_caret -%}
+                        <svg
+                          class="h__caret"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                      {%- endif -%}
+                    </a>
+                    <div
+                      class="h__mega"
+                      id="{{ panel_id }}"
+                      {% if mega %}
+                        {{- mega.shopify_attributes -}}
+                      {% endif %}
+                    >
+                      <div class="h__mega-inner">
+                        <ul class="h__mega-cols" role="list" style="--cols: {{ cols }};">
+                          {%- if custom_cols -%}
+                            {%- comment -%}
+                              Columns built from the block settings. Shopify menus stop at
+                              three levels, so each column points at its own menu instead
+                              of relying on grandchildren of this item.
+                            {%- endcomment -%}
+                            {%- for i in (1..10) -%}
+                              {%- liquid
+                                assign t_key = 'title_' | append: i
+                                assign m_key = 'menu_' | append: i
+                                assign col_title = mega.settings[t_key]
+                                assign col_menu = linklists[mega.settings[m_key]]
+                              -%}
+                              {%- if col_title != blank or col_menu.links.size > 0 -%}
+                                <li>
+                                  {%- if col_title != blank -%}
+                                    <span class="h__mega-title">{{ col_title | escape }}</span>
+                                  {%- endif -%}
+                                  {%- if col_menu.links.size > 0 -%}
+                                    <ul class="h__mega-list" role="list">
+                                      {%- for item in col_menu.links -%}
+                                        <li>
+                                          <a href="{{ item.url }}">{{ item.title | escape }}</a>
+                                        </li>
+                                      {%- endfor -%}
+                                    </ul>
+                                  {%- endif -%}
+                                </li>
+                              {%- endif -%}
+                            {%- endfor -%}
+                          {%- else -%}
+                            {%- for child in link.links -%}
+                              <li>
+                                <a class="h__mega-title" href="{{ child.url }}">{{ child.title | escape }}</a>
+                                {%- if child.links.size > 0 -%}
+                                  <ul class="h__mega-list" role="list">
+                                    {%- for grand in child.links -%}
+                                      <li>
+                                        <a href="{{ grand.url }}">{{ grand.title | escape }}</a>
+                                      </li>
+                                    {%- endfor -%}
+                                  </ul>
+                                {%- endif -%}
+                              </li>
+                            {%- endfor -%}
+                          {%- endif -%}
+                        </ul>
+                      </div>
+                    </div>
+                  </li>
+
+                {%- else -%}
+                  <li class="h__item h__item--drop" data-menu-item>
+                    <a
+                      class="h__link"
+                      href="{{ link.url }}"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      aria-controls="{{ panel_id }}"
+                      data-menu-trigger
+                      {% if link.current %}
+                        aria-current="page"
+                      {% endif %}
+                    >
+                      {{ link.title | escape }}
+                      {%- if section.settings.show_caret -%}
+                        <svg
+                          class="h__caret"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                      {%- endif -%}
+                    </a>
+                    <ul class="h__drop" id="{{ panel_id }}" role="list">
+                      {%- for child in link.links -%}
+                        {%- if child.links.size > 0 -%}
+                          <li class="h__drop-group">{{ child.title | escape }}</li>
+                          {%- for grand in child.links -%}
+                            <li>
+                              <a href="{{ grand.url }}">{{ grand.title | escape }}</a>
+                            </li>
+                          {%- endfor -%}
+                        {%- else -%}
+                          <li>
+                            <a href="{{ child.url }}">{{ child.title | escape }}</a>
+                          </li>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </ul>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </nav>
+
+        <div class="h__icons">
+          {%- if shop.customer_accounts_enabled -%}
+            <a
+              class="h__icon h__icon--account"
+              href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
+              aria-label="Account"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="8.2" r="3.9"/><path d="M4.6 20.2c.9-3.6 3.9-5.7 7.4-5.7s6.5 2.1 7.4 5.7"/>
+              </svg>
+            </a>
+          {%- endif -%}
+          <button
+            type="button"
+            class="h__icon"
+            data-search-open
+            aria-label="Search"
+            aria-expanded="false"
+            aria-controls="HdrSearch-{{ sid }}"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="10.8" cy="10.8" r="6.6"/><path d="M15.7 15.7l4.6 4.6"/>
+            </svg>
+          </button>
+          <a
+            class="h__icon"
+            href="{{ routes.cart_url }}"
+            aria-label="Cart, {{ cart.item_count }} items"
+            aria-haspopup="dialog"
+            aria-controls="cart-drawer"
+            data-cart-link
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M5.2 8.2h13.6l-1.1 11.3H6.3z"/><path d="M8.8 10.4V7.1a3.2 3.2 0 016.4 0v3.3"/>
+            </svg>
+            <span class="h__count" data-cart-count data-count="{{ cart.item_count }}">{{ cart.item_count }}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="h__search" id="HdrSearch-{{ sid }}" data-search-panel aria-hidden="true">
+      <form class="h__search-form" action="{{ routes.search_url }}" method="get" role="search">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <circle cx="10.8" cy="10.8" r="6.6"/><path d="M15.7 15.7l4.6 4.6"/>
+        </svg>
+        <input type="hidden" name="type" value="product">
+        <input
+          class="h__search-input"
+          type="search"
+          name="q"
+          placeholder="{{ section.settings.search_placeholder | escape }}"
+          aria-label="Search"
+          autocomplete="off"
+          data-search-input
+        >
+        <button type="button" class="h__search-close" data-search-close aria-label="Close search">
+          <svg
+            viewBox="0 0 24 24"
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d="M6 6l12 12M18 6L6 18"/>
+          </svg>
+        </button>
+      </form>
+      <div class="h__results" data-search-results aria-live="polite"></div>
+    </div>
+  </header>
+
+  <div class="h__overlay" data-drawer-close></div>
+
+  <div
+    class="h__drawer"
+    id="HdrDrawer-{{ sid }}"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Menu"
+    aria-hidden="true"
+    data-drawer
+  >
+    <div class="h__drawer-head">
+      {{ logo_markup }}
+      <button type="button" class="h__icon" data-drawer-close aria-label="Close menu">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M6 6l12 12M18 6L6 18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="h__drawer-body">
+      {%- if menu != blank -%}
+        <ul class="h__m-list" role="list">
+          {%- for link in menu.links -%}
+            {%- liquid
+              # Mega menu columns live in the block settings, not in the menu tree,
+              # so the drawer has to look them up the same way the desktop panel does.
+              assign d_mega = null
+              assign d_key = link.title | strip | downcase
+              for m in megas
+                assign m_key = m.settings.menu_item | strip | downcase
+                if m_key == d_key
+                  assign d_mega = m
+                  break
+                endif
+              endfor
+
+              assign d_custom = false
+              if d_mega != null
+                for n in (1..10)
+                  assign t_key = 'title_' | append: n
+                  assign m_key = 'menu_' | append: n
+                  if d_mega.settings[t_key] != blank or d_mega.settings[m_key] != blank
+                    assign d_custom = true
+                    break
+                  endif
+                endfor
+              endif
+            -%}
+            <li class="h__m-item">
+              {%- if d_custom -%}
+                <details>
+                  <summary>
+                    {{ link.title | escape }}
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                  </summary>
+                  <ul class="h__m-children" role="list">
+                    <li>
+                      <a href="{{ link.url }}">View all {{ link.title | escape }}</a>
+                    </li>
+                    {%- for i in (1..10) -%}
+                      {%- liquid
+                        assign t_key = 'title_' | append: i
+                        assign m_key = 'menu_' | append: i
+                        assign col_title = d_mega.settings[t_key]
+                        assign col_menu = linklists[d_mega.settings[m_key]]
+                      -%}
+                      {%- if col_menu.links.size > 0 -%}
+                        <li>
+                          <details class="h__m-sub">
+                            <summary>
+                              {{ col_title | default: link.title | escape }}
+                              <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                aria-hidden="true"
+                              >
+                                <path d="M6 9l6 6 6-6"/>
+                              </svg>
+                            </summary>
+                            <ul class="h__m-children" role="list">
+                              {%- for item in col_menu.links -%}
+                                <li>
+                                  <a href="{{ item.url }}">{{ item.title | escape }}</a>
+                                </li>
+                              {%- endfor -%}
+                            </ul>
+                          </details>
+                        </li>
+                      {%- elsif col_title != blank -%}
+                        <li>
+                          <span class="h__m-cap">{{ col_title | escape }}</span>
+                        </li>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </ul>
+                </details>
+
+              {%- elsif link.links.size > 0 -%}
+                <details>
+                  <summary>
+                    {{ link.title | escape }}
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                  </summary>
+                  <ul class="h__m-children" role="list">
+                    {%- for child in link.links -%}
+                      <li>
+                        {%- if child.links.size > 0 -%}
+                          <details class="h__m-sub">
+                            <summary>
+                              {{ child.title | escape }}
+                              <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                aria-hidden="true"
+                              >
+                                <path d="M6 9l6 6 6-6"/>
+                              </svg>
+                            </summary>
+                            <ul class="h__m-children" role="list">
+                              <li>
+                                <a href="{{ child.url }}">View all {{ child.title | escape }}</a>
+                              </li>
+                              {%- for grand in child.links -%}
+                                <li>
+                                  <a href="{{ grand.url }}">{{ grand.title | escape }}</a>
+                                </li>
+                              {%- endfor -%}
+                            </ul>
+                          </details>
+                        {%- else -%}
+                          <a href="{{ child.url }}">{{ child.title | escape }}</a>
+                        {%- endif -%}
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </details>
+              {%- else -%}
+                <a class="h__m-link" href="{{ link.url }}">{{ link.title | escape }}</a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+
+    <div class="h__drawer-foot">
+      <div class="h__account-links">
+        {%- if shop.customer_accounts_enabled -%}
+          {%- if customer -%}
+            <a href="{{ routes.account_url }}">Account</a>
+            <a href="{{ routes.account_logout_url }}">Log out</a>
+          {%- else -%}
+            <a href="{{ routes.account_login_url }}">Log in</a>
+            <a href="{{ routes.account_register_url }}">Create account</a>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+      <div class="h__socials">
+        {%- if section.settings.facebook != blank -%}
+          <a href="{{ section.settings.facebook }}" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M13.5 21v-7.6h2.6l.4-3h-3V8.5c0-.9.3-1.5 1.5-1.5h1.6V4.3a21 21 0 00-2.3-.1c-2.3 0-3.9 1.4-3.9 4v2.2H7.8v3h2.6V21z"/>
+            </svg>
+          </a>
+        {%- endif -%}
+        {%- if section.settings.instagram != blank -%}
+          <a href="{{ section.settings.instagram }}" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 7.3a4.7 4.7 0 100 9.4 4.7 4.7 0 000-9.4zm0 7.7a3 3 0 110-6 3 3 0 010 6zm5.9-7.9a1.1 1.1 0 11-2.2 0 1.1 1.1 0 012.2 0zM21 8.1c-.1-1.6-.4-3-1.6-4.1S16.9 2.6 15.3 2.5c-1.6-.1-5.1-.1-6.7 0-1.6.1-3 .4-4.1 1.6S3.1 6.5 3 8.1c-.1 1.6-.1 6.3 0 7.9.1 1.6.4 3 1.6 4.1s2.5 1.5 4.1 1.6c1.6.1 5.1.1 6.7 0 1.6-.1 3-.4 4.1-1.6s1.5-2.5 1.6-4.1c.1-1.6.1-6.3 0-7.9zm-2 9.5a3.1 3.1 0 01-1.7 1.7c-1.2.5-4 .4-5.3.4s-4.1.1-5.3-.4a3.1 3.1 0 01-1.7-1.7c-.5-1.2-.4-4-.4-5.3s-.1-4.1.4-5.3a3.1 3.1 0 011.7-1.7c1.2-.5 4-.4 5.3-.4s4.1-.1 5.3.4a3.1 3.1 0 011.7 1.7c.5 1.2.4 4 .4 5.3s.1 4.1-.4 5.3z"/>
+            </svg>
+          </a>
+        {%- endif -%}
+        {%- if section.settings.youtube != blank -%}
+          <a href="{{ section.settings.youtube }}" target="_blank" rel="noopener" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21.6 7.2a2.5 2.5 0 00-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 002.4 7.2 26 26 0 002 12a26 26 0 00.4 4.8 2.5 2.5 0 001.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 001.8-1.8A26 26 0 0022 12a26 26 0 00-.4-4.8zM10 15V9l5.2 3z"/>
+            </svg>
+          </a>
+        {%- endif -%}
+        {%- if section.settings.tiktok != blank -%}
+          <a href="{{ section.settings.tiktok }}" target="_blank" rel="noopener" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M19.6 8.3a6.2 6.2 0 01-3.6-1.2v5.6a5.2 5.2 0 11-4.5-5.2v2.8a2.4 2.4 0 102 2.4V2.5h2.6a3.6 3.6 0 003.5 3.3z"/>
+            </svg>
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('Hdr-{{ section.id }}');
+    if (!root || root.dataset.ready === 'true') return;
+    root.dataset.ready = 'true';
+
+    var desktopQuery = window.matchMedia('(min-width: {{ section.settings.mobile_breakpoint | plus: 1 }}px)');
+    var hoverCapable = window.matchMedia('(hover: hover)');
+
+    /* Announcement rotation */
+    var bar = root.querySelector('[data-bar]');
+    if (bar) {
+      var slides = bar.querySelectorAll('.h__bar-item');
+      var speed = (parseInt(bar.getAttribute('data-speed'), 10) || 4) * 1000;
+      var current = 0;
+      var paused = false;
+      if (slides.length > 1) {
+        bar.addEventListener('mouseenter', function () {
+          paused = true;
+        });
+        bar.addEventListener('mouseleave', function () {
+          paused = false;
+        });
+        setInterval(function () {
+          if (paused) return;
+          slides[current].classList.remove('is-active');
+          current = (current + 1) % slides.length;
+          slides[current].classList.add('is-active');
+        }, speed);
+      }
+    }
+
+    /* Desktop menus */
+    var items = root.querySelectorAll('[data-menu-item]');
+    var closeTimer;
+
+    function closeAll(except) {
+      items.forEach(function (item) {
+        if (item === except) return;
+        item.classList.remove('is-open');
+        var t = item.querySelector('[data-menu-trigger]');
+        if (t) t.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    function open(item) {
+      clearTimeout(closeTimer);
+      closeAll(item);
+      closeSearch();
+      item.classList.add('is-open');
+      var t = item.querySelector('[data-menu-trigger]');
+      if (t) t.setAttribute('aria-expanded', 'true');
+    }
+
+    items.forEach(function (item) {
+      var trigger = item.querySelector('[data-menu-trigger]');
+
+      item.addEventListener('mouseenter', function () {
+        if (!desktopQuery.matches || !hoverCapable.matches) return;
+        open(item);
+      });
+
+      item.addEventListener('mouseleave', function () {
+        if (!desktopQuery.matches || !hoverCapable.matches) return;
+        closeTimer = setTimeout(function () {
+          closeAll();
+        }, 160);
+      });
+
+      if (trigger) {
+        trigger.addEventListener('click', function (event) {
+          if (hoverCapable.matches && desktopQuery.matches) return;
+          if (!item.classList.contains('is-open')) {
+            event.preventDefault();
+            open(item);
+          }
+        });
+
+        trigger.addEventListener('keydown', function (event) {
+          if (event.key === 'ArrowDown' || event.key === ' ') {
+            event.preventDefault();
+            open(item);
+            var first = item.querySelector('.h__mega a, .h__drop a');
+            if (first) first.focus();
+          }
+        });
+      }
+
+      item.addEventListener('focusout', function (event) {
+        if (!item.contains(event.relatedTarget)) {
+          item.classList.remove('is-open');
+          if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+
+    document.addEventListener('click', function (event) {
+      if (!root.contains(event.target)) {
+        closeAll();
+        closeSearch();
+      }
+    });
+
+    /* Search */
+    var searchPanel = root.querySelector('[data-search-panel]');
+    var searchInput = root.querySelector('[data-search-input]');
+    var searchResults = root.querySelector('[data-search-results]');
+    var searchOpenBtn = root.querySelector('[data-search-open]');
+    var searchUrl = root.getAttribute('data-search-url');
+    var searchPage = root.getAttribute('data-search-page');
+    // Built by concatenation so the source never contains a literal
+    // double brace pair, which Liquid would try to parse as a tag.
+    var OPEN = '{' + '{';
+    var CLOSE = '}' + '}';
+    var moneyFormat = root.getAttribute('data-money') || '$' + OPEN + 'amount' + CLOSE;
+    var searchTimer;
+    var lastQuery = '';
+
+    function money(value) {
+      var n = parseFloat(value);
+      if (isNaN(n)) return value;
+      var fixed = n.toFixed(2);
+      var parts = fixed.split('.');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return moneyFormat.replace(/\{\{\s*(\w+)\s*\}\}/, function (m, kind) {
+        if (kind === 'amount_no_decimals') return parts[0];
+        if (kind === 'amount_with_comma_separator') return parts[0].replace(/,/g, '.') + ',' + parts[1];
+        return parts.join('.');
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
+    function openSearch() {
+      closeAll();
+      root.classList.add('is-search-open');
+      if (searchPanel) searchPanel.setAttribute('aria-hidden', 'false');
+      if (searchOpenBtn) searchOpenBtn.setAttribute('aria-expanded', 'true');
+      setTimeout(function () {
+        if (searchInput) searchInput.focus();
+      }, 60);
+    }
+
+    function closeSearch() {
+      if (!root.classList.contains('is-search-open')) return;
+      root.classList.remove('is-search-open');
+      if (searchPanel) searchPanel.setAttribute('aria-hidden', 'true');
+      if (searchOpenBtn) searchOpenBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    if (searchOpenBtn) {
+      searchOpenBtn.addEventListener('click', function (event) {
+        event.stopPropagation();
+        if (root.classList.contains('is-search-open')) closeSearch();
+        else openSearch();
+      });
+    }
+
+    var searchCloseBtn = root.querySelector('[data-search-close]');
+    if (searchCloseBtn) searchCloseBtn.addEventListener('click', closeSearch);
+
+    function runSearch(q) {
+      if (!searchResults) return;
+      if (q.length < 2) {
+        searchResults.innerHTML = '';
+        return;
+      }
+      lastQuery = q;
+      var url =
+        searchUrl +
+        '.json?q=' +
+        encodeURIComponent(q) +
+        '&resources[type]=product&resources[limit]=6&resources[options][unavailable_products]=last';
+
+      fetch(url)
+        .then(function (res) {
+          return res.json();
+        })
+        .then(function (data) {
+          if (q !== lastQuery) return;
+          var products = (data.resources && data.resources.results && data.resources.results.products) || [];
+          var allUrl = searchPage + '?type=product&q=' + encodeURIComponent(q);
+
+          if (!products.length) {
+            searchResults.innerHTML =
+              '<p class="h__results-empty">No matches for "' + escapeHtml(q) + '". Try a brand or a scent note.</p>';
+            return;
+          }
+
+          var html = '<ul class="h__results-list" role="list">';
+          products.forEach(function (p) {
+            var img = p.featured_image && p.featured_image.url ? p.featured_image.url : p.image;
+            html += '<li><a class="h__result" href="' + p.url + '">';
+            if (img)
+              html += '<img src="' + img + (img.indexOf('?') > -1 ? '&' : '?') + 'width=120" alt="" loading="lazy">';
+            html += '<div><p class="h__result-name">' + escapeHtml(p.title) + '</p>';
+            html +=
+              '<p class="h__result-price">' +
+              (p.vendor ? escapeHtml(p.vendor) + ' &middot; ' : '') +
+              money(p.price) +
+              '</p></div>';
+            html += '</a></li>';
+          });
+          html += '</ul><a class="h__results-all" href="' + allUrl + '">See all results</a>';
+          searchResults.innerHTML = html;
+        })
+        .catch(function () {});
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', function () {
+        clearTimeout(searchTimer);
+        var q = searchInput.value.trim();
+        searchTimer = setTimeout(function () {
+          runSearch(q);
+        }, 250);
+      });
+    }
+
+    /* Cart drawer. The theme renders <theme-drawer id="cart-drawer"> from
+       layout/theme.liquid, so it is on the page whatever header is in use.
+       If it is missing the link just goes to the cart page as before. */
+    var cartLink = root.querySelector('[data-cart-link]');
+    if (cartLink) {
+      cartLink.addEventListener('click', function (event) {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+        var cartDrawer = document.getElementById('cart-drawer');
+        if (!cartDrawer || typeof cartDrawer.toggle !== 'function') return;
+        event.preventDefault();
+        closeSearch();
+        closeAll();
+        cartDrawer.toggle();
+      });
+    }
+
+    /* Drawer */
+    var drawer = root.querySelector('[data-drawer]');
+    var drawerOpenBtn = root.querySelector('[data-drawer-open]');
+
+    function openDrawer() {
+      closeSearch();
+      root.classList.add('is-drawer-open');
+      drawer.setAttribute('aria-hidden', 'false');
+      if (drawerOpenBtn) drawerOpenBtn.setAttribute('aria-expanded', 'true');
+      document.documentElement.style.overflow = 'hidden';
+      var focusable = drawer.querySelector('button, a');
+      if (focusable)
+        setTimeout(function () {
+          focusable.focus();
+        }, 80);
+    }
+
+    function closeDrawer() {
+      if (!root.classList.contains('is-drawer-open')) return;
+      root.classList.remove('is-drawer-open');
+      drawer.setAttribute('aria-hidden', 'true');
+      if (drawerOpenBtn) {
+        drawerOpenBtn.setAttribute('aria-expanded', 'false');
+        drawerOpenBtn.focus();
+      }
+      document.documentElement.style.overflow = '';
+    }
+
+    if (drawerOpenBtn) drawerOpenBtn.addEventListener('click', openDrawer);
+    root.querySelectorAll('[data-drawer-close]').forEach(function (el) {
+      el.addEventListener('click', closeDrawer);
+    });
+
+    desktopQuery.addEventListener('change', function (e) {
+      if (e.matches) closeDrawer();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key !== 'Escape') return;
+      closeAll();
+      closeSearch();
+      closeDrawer();
+    });
+
+    /* Sticky behaviour.
+       From 990px up the theme scrolls .page-wrapper rather than the window,
+       so the offset has to be read from whichever one is actually moving. */
+    var sticky = root.getAttribute('data-sticky');
+    var wrapper = root.closest('.shopify-section') || root.parentElement;
+    var pageWrapper = document.querySelector('.page-wrapper');
+
+    function scrollY() {
+      var win = window.pageYOffset || document.documentElement.scrollTop || 0;
+      var page = pageWrapper ? pageWrapper.scrollTop : 0;
+      return Math.max(win, page);
+    }
+
+    var lastY = scrollY();
+    var ticking = false;
+
+    function onScroll() {
+      var y = scrollY();
+      root.classList.toggle('is-scrolled', y > 10);
+
+      if (sticky === 'reveal' && wrapper) {
+        var busy = root.classList.contains('is-search-open') || root.querySelector('[data-menu-item].is-open');
+        if (y > lastY && y > 200 && !busy) wrapper.classList.add('is-hidden');
+        else if (y < lastY) wrapper.classList.remove('is-hidden');
+      }
+
+      lastY = y;
+      ticking = false;
+    }
+
+    function queueScroll() {
+      if (ticking) return;
+      window.requestAnimationFrame(onScroll);
+      ticking = true;
+    }
+
+    window.addEventListener('scroll', queueScroll, { passive: true });
+    if (pageWrapper) pageWrapper.addEventListener('scroll', queueScroll, { passive: true });
+    onScroll();
+
+    /* Cart count sync */
+    function refreshCount() {
+      fetch((window.Shopify && Shopify.routes ? Shopify.routes.root : '/') + 'cart.js')
+        .then(function (r) {
+          return r.json();
+        })
+        .then(function (cart) {
+          root.querySelectorAll('[data-cart-count]').forEach(function (el) {
+            el.textContent = cart.item_count;
+            el.setAttribute('data-count', cart.item_count);
+          });
+          var link = root.querySelector('[data-cart-link]');
+          if (link) link.setAttribute('aria-label', 'Cart, ' + cart.item_count + ' items');
+        })
+        .catch(function () {});
+    }
+
+    ['cart:update', 'cart:refresh', 'cart:updated'].forEach(function (name) {
+      document.addEventListener(name, refreshCount);
+    });
+
+    /* Theme editor */
+    document.addEventListener('shopify:block:select', function (event) {
+      var block = event.target;
+      if (!root.contains(block)) return;
+      var item = block.closest('[data-menu-item]');
+      if (item) open(item);
+    });
+
+    document.addEventListener('shopify:block:deselect', function () {
+      closeAll();
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "tag": "div",
+  "class": "bytefied-header-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image",
+      "info": "Leave empty to show the store name as text."
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 60,
+      "max": 300,
+      "step": 5,
+      "unit": "px",
+      "label": "Logo width on desktop",
+      "default": 170
+    },
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "min": 60,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Logo width on mobile",
+      "default": 120
+    },
+    {
+      "type": "header",
+      "content": "Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_mega",
+      "label": "Turn every three level menu into a mega menu",
+      "info": "When off, only menu items named in a Mega menu block open as a mega menu. Every other item with children opens as a normal dropdown.",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "menu_position",
+      "label": "Menu position",
+      "options": [
+        { "value": "flex-start", "label": "Left, after the logo" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Right, before the icons" }
+      ],
+      "default": "flex-end"
+    },
+    {
+      "type": "range",
+      "id": "menu_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Menu text size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "menu_gap",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Space between menu items",
+      "default": 26
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase_menu",
+      "label": "Uppercase menu",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_caret",
+      "label": "Show arrow on items with a dropdown",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Look"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Header colors",
+      "options": [
+        { "value": "light", "label": "White header, black text" },
+        { "value": "dark", "label": "Black header, white text" }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "label": "Content width",
+      "default": 1440
+    },
+    {
+      "type": "range",
+      "id": "header_height",
+      "min": 56,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "label": "Header height on desktop",
+      "default": 84
+    },
+    {
+      "type": "range",
+      "id": "header_height_mobile",
+      "min": 48,
+      "max": 90,
+      "step": 2,
+      "unit": "px",
+      "label": "Header height on mobile",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "mobile_breakpoint",
+      "min": 750,
+      "max": 1400,
+      "step": 10,
+      "unit": "px",
+      "label": "Switch to the mobile menu below",
+      "info": "Raise this if the desktop menu wraps onto two lines.",
+      "default": 1150
+    },
+    {
+      "type": "select",
+      "id": "sticky",
+      "label": "Sticky header",
+      "options": [
+        { "value": "none", "label": "Off" },
+        { "value": "always", "label": "Always visible" },
+        { "value": "reveal", "label": "Hide on scroll down, show on scroll up" }
+      ],
+      "default": "reveal"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder",
+      "default": "Search by brand, name or scent note"
+    },
+    {
+      "type": "header",
+      "content": "Announcement bar"
+    },
+    {
+      "type": "color",
+      "id": "bar_bg",
+      "label": "Background",
+      "default": "#1c1a17"
+    },
+    {
+      "type": "color",
+      "id": "bar_fg",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "bar_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Seconds per message",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Social links in the mobile menu"
+    },
+    { "type": "url", "id": "instagram", "label": "Instagram" },
+    { "type": "url", "id": "tiktok", "label": "TikTok" },
+    { "type": "url", "id": "facebook", "label": "Facebook" },
+    { "type": "url", "id": "youtube", "label": "YouTube" }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Free shipping on orders over $125" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    },
+    {
+      "type": "mega",
+      "name": "Mega menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_item",
+          "label": "Menu item to turn into a mega menu",
+          "info": "Type the exact title of a top level item from your menu, for example Shop. Its second level links become column headings and third level links sit under them.",
+          "default": "Shop"
+        },
+        {
+          "type": "range",
+          "id": "columns",
+          "min": 2,
+          "max": 6,
+          "step": 1,
+          "label": "Columns",
+          "default": 5
+        },
+        {
+          "type": "paragraph",
+          "content": "Fill a column to build the panel by hand. Leave them all empty and the panel falls back to the second and third level of the menu item above."
+        },
+        { "type": "header", "content": "Column 1" },
+        { "type": "text", "id": "title_1", "label": "Heading" },
+        { "type": "link_list", "id": "menu_1", "label": "Links" },
+        { "type": "header", "content": "Column 2" },
+        { "type": "text", "id": "title_2", "label": "Heading" },
+        { "type": "link_list", "id": "menu_2", "label": "Links" },
+        { "type": "header", "content": "Column 3" },
+        { "type": "text", "id": "title_3", "label": "Heading" },
+        { "type": "link_list", "id": "menu_3", "label": "Links" },
+        { "type": "header", "content": "Column 4" },
+        { "type": "text", "id": "title_4", "label": "Heading" },
+        { "type": "link_list", "id": "menu_4", "label": "Links" },
+        { "type": "header", "content": "Column 5" },
+        { "type": "text", "id": "title_5", "label": "Heading" },
+        { "type": "link_list", "id": "menu_5", "label": "Links" },
+        { "type": "header", "content": "Column 6" },
+        { "type": "text", "id": "title_6", "label": "Heading" },
+        { "type": "link_list", "id": "menu_6", "label": "Links" },
+        { "type": "header", "content": "Column 7" },
+        { "type": "text", "id": "title_7", "label": "Heading" },
+        { "type": "link_list", "id": "menu_7", "label": "Links" },
+        { "type": "header", "content": "Column 8" },
+        { "type": "text", "id": "title_8", "label": "Heading" },
+        { "type": "link_list", "id": "menu_8", "label": "Links" },
+        { "type": "header", "content": "Column 9" },
+        { "type": "text", "id": "title_9", "label": "Heading" },
+        { "type": "link_list", "id": "menu_9", "label": "Links" },
+        { "type": "header", "content": "Column 10" },
+        { "type": "text", "id": "title_10", "label": "Heading" },
+        { "type": "link_list", "id": "menu_10", "label": "Links" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bytefied Header",
+      "category": "Bytefied",
+      "blocks": [
+        { "type": "announcement", "settings": { "text": "Free shipping on orders over $125" } },
+        { "type": "announcement", "settings": { "text": "Samples from $6.99 so you can try before you buy" } },
+        { "type": "announcement", "settings": { "text": "100% authentic and ships in 2 business days" } },
+        { "type": "mega", "settings": { "menu_item": "Shop", "columns": 5 } }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "groups": ["header"]
+  }
+}
+{% endschema %}

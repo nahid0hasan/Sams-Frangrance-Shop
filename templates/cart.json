@@ -1,0 +1,47 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "cart-section": {
+      "type": "bytefied-cart",
+      "settings": {}
+    },
+    "scent_product_jMj8xi": {
+      "type": "scent-product",
+      "name": "Product Carousel",
+      "settings": {
+        "collection": "best-sellers",
+        "products_to_show": 4,
+        "title": "",
+        "subtitle": "",
+        "title_alignment": "center",
+        "title_size": 38,
+        "title_gap": 48,
+        "layout": "grid",
+        "color_scheme": "white",
+        "columns_desktop": 4,
+        "columns_tablet": 3,
+        "mobile_columns": "peek",
+        "column_gap": 24,
+        "show_arrows": true,
+        "show_vendor": true,
+        "show_price": true,
+        "show_rating": true,
+        "hover_second_image": true,
+        "padding_top": 40,
+        "padding_bottom": 60
+      }
+    }
+  },
+  "order": [
+    "cart-section",
+    "scent_product_jMj8xi"
+  ]
+}

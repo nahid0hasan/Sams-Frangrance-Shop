@@ -1,0 +1,1101 @@
+{%- liquid
+  assign layout = section.settings.layout
+  assign has_info = false
+  if section.blocks.size > 0 and layout == 'split'
+    assign has_info = true
+  endif
+-%}
+
+{% style %}
+  #Contact-{{ section.id }} {
+    --ct-black: #1c1a17;
+    --ct-white: #ffffff;
+    --ct-grey: #f5f5f4;
+    --ct-border: #e5e5e3;
+    --ct-muted: #6b6b68;
+    --ct-hover: #3a3734;
+    --ct-font: 'Geist', 'Geist Sans', 'GeistVF', -apple-system, system-ui, sans-serif;
+
+    {% if section.settings.color_scheme == 'white' %}
+      --ct-bg: #ffffff;
+      --ct-card: #f5f5f4;
+      --ct-field: #ffffff;
+    {% else %}
+      --ct-bg: #f5f5f4;
+      --ct-card: #ffffff;
+      --ct-field: #ffffff;
+    {% endif %}
+
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    background-color: var(--ct-bg);
+    color: var(--ct-black);
+    font-family: var(--ct-font);
+
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  #Contact-{{ section.id }},
+  #Contact-{{ section.id }} * {
+    font-family: var(--ct-font) !important;
+  }
+
+  #Contact-{{ section.id }} .container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* Head */
+  #Contact-{{ section.id }} .ct__head {
+    max-width: 640px;
+    margin: 0 auto {{ section.settings.title_gap }}px;
+    text-align: center;
+  }
+
+  #Contact-{{ section.id }} .ct__eyebrow {
+    margin: 0 0 14px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ct-muted);
+  }
+
+  #Contact-{{ section.id }} .ct__title {
+    margin: 0;
+    font-size: clamp(1.75rem, 3.6vw, {{ section.settings.title_size | divided_by: 16.0 }}rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--ct-black);
+  }
+
+  #Contact-{{ section.id }} .ct__sub {
+    margin: 14px 0 0;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ct-muted);
+  }
+
+  #Contact-{{ section.id }} .ct__sub p {
+    margin: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  /* Layout */
+  #Contact-{{ section.id }} .ct__layout {
+    display: grid;
+    gap: 28px;
+    align-items: start;
+    {% if has_info %}
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+    {% else %}
+      grid-template-columns: minmax(0, 1fr);
+      max-width: {{ section.settings.form_width }}px;
+      margin: 0 auto;
+    {% endif %}
+  }
+
+  /* Info column — one card, rows inside */
+  #Contact-{{ section.id }} .ct__info-box {
+    border: 1px solid var(--ct-border);
+    border-radius: 10px;
+    background-color: #fafafb;
+    overflow: hidden;
+  }
+
+  #Contact-{{ section.id }} .ct__info-head {
+    padding: 20px 22px 18px;
+    border-bottom: 1px solid var(--ct-border);
+    background-color: var(--ct-black);
+    color: var(--ct-white);
+  }
+
+  #Contact-{{ section.id }} .ct__info-head-title {
+    display: block;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  #Contact-{{ section.id }} .ct__info-head-text {
+    display: block;
+    margin: 6px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  #Contact-{{ section.id }} .ct__info-row {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 22px;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.28s ease;
+  }
+
+  #Contact-{{ section.id }} .ct__info-row + .ct__info-row {
+    border-top: 1px solid var(--ct-border);
+  }
+
+  #Contact-{{ section.id }} a.ct__info-row:hover {
+    background-color: var(--ct-bg);
+  }
+
+  #Contact-{{ section.id }} a.ct__info-row:focus-visible {
+    outline: 2px solid var(--ct-black);
+    outline-offset: -2px;
+  }
+
+  #Contact-{{ section.id }} .ct__info-icon {
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--ct-black);
+    color: var(--ct-white);
+    transition: transform 0.28s ease;
+  }
+
+  #Contact-{{ section.id }} a.ct__info-row:hover .ct__info-icon {
+    transform: scale(1.06);
+  }
+
+  #Contact-{{ section.id }} .ct__info-icon svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  #Contact-{{ section.id }} .ct__info-body {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  #Contact-{{ section.id }} .ct__info-title {
+    display: block;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--ct-black);
+  }
+
+  #Contact-{{ section.id }} .ct__info-text {
+    display: block;
+    margin: 4px 0 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ct-muted);
+    word-break: break-word;
+  }
+
+  #Contact-{{ section.id }} .ct__info-arrow {
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+    margin-top: 13px;
+    color: var(--ct-muted);
+    transition: transform 0.28s ease, color 0.28s ease;
+  }
+
+  #Contact-{{ section.id }} .ct__info-arrow svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  #Contact-{{ section.id }} a.ct__info-row:hover .ct__info-arrow {
+    color: var(--ct-black);
+    transform: translateX(3px);
+  }
+
+  /* Form card */
+  #Contact-{{ section.id }} .ct__card {
+    padding: clamp(22px, 3.4vw, 40px);
+    border: 1px solid var(--ct-border);
+    border-radius: 8px;
+    background-color: #fafafb;
+  }
+
+  #Contact-{{ section.id }} .ct__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  #Contact-{{ section.id }} .ct__full {
+    grid-column: 1 / -1;
+  }
+
+  /* Floating label field */
+  #Contact-{{ section.id }} .ct__field {
+    position: relative;
+  }
+
+  #Contact-{{ section.id }} .ct__input {
+    display: block;
+    width: 100%;
+    min-height: 56px;
+    padding: 24px 14px 8px;
+    border: 1px solid var(--ct-border);
+    border-radius: 4px;
+    background-color: var(--ct-field);
+    color: var(--ct-black);
+    font-size: 15px;
+    line-height: 1.4;
+    box-sizing: border-box;
+    transition: border-color 0.24s ease, box-shadow 0.24s ease;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  #Contact-{{ section.id }} textarea.ct__input {
+    min-height: 170px;
+    padding-top: 28px;
+    resize: vertical;
+  }
+
+  #Contact-{{ section.id }} .ct__input::placeholder {
+    color: transparent;
+  }
+
+  #Contact-{{ section.id }} .ct__input:hover {
+    border-color: #cfcfcc;
+  }
+
+  #Contact-{{ section.id }} .ct__input:focus {
+    outline: none;
+    border-color: var(--ct-black);
+    box-shadow: 0 0 0 3px rgba(28, 26, 23, 0.08);
+  }
+
+  #Contact-{{ section.id }} .ct__label {
+    position: absolute;
+    top: 18px;
+    left: 15px;
+    right: 15px;
+    font-size: 15px;
+    line-height: 1.3;
+    color: var(--ct-muted);
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transform-origin: left top;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  #Contact-{{ section.id }} .ct__input:focus + .ct__label,
+  #Contact-{{ section.id }} .ct__input:not(:placeholder-shown) + .ct__label {
+    transform: translateY(-10px) scale(0.78);
+    color: var(--ct-black);
+  }
+
+  #Contact-{{ section.id }} .ct__req {
+    color: var(--ct-black);
+  }
+
+  /* Footer of form */
+  #Contact-{{ section.id }} .ct__foot {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+    margin-top: 22px;
+  }
+
+  #Contact-{{ section.id }} .ct__legal {
+    width: 100%;
+    margin: 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--ct-border);
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ct-muted);
+  }
+
+  #Contact-{{ section.id }} .ct__legal p {
+    margin: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  #Contact-{{ section.id }} .ct__legal a {
+    color: var(--ct-black);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  #Contact-{{ section.id }} .ct__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 54px;
+    padding: 0 34px;
+    border: 1px solid var(--ct-black);
+    border-radius: 3px;
+    background-color: var(--ct-black);
+    color: var(--ct-white);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.28s ease, border-color 0.28s ease, transform 0.28s ease;
+  }
+
+  #Contact-{{ section.id }} .ct__btn svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.28s ease;
+  }
+
+  #Contact-{{ section.id }} .ct__btn:hover {
+    background-color: var(--ct-hover);
+    border-color: var(--ct-hover);
+    transform: translateY(-1px);
+  }
+
+  #Contact-{{ section.id }} .ct__btn:hover svg {
+    transform: translateX(3px);
+  }
+
+  #Contact-{{ section.id }} .ct__btn:focus-visible {
+    outline: 2px solid var(--ct-black);
+    outline-offset: 3px;
+  }
+
+  #Contact-{{ section.id }} .ct__btn[disabled] {
+    opacity: 0.6;
+    cursor: default;
+    transform: none;
+  }
+
+  /* Status */
+  #Contact-{{ section.id }} .ct__status {
+    display: flex;
+    gap: 12px;
+    margin: 0 0 22px;
+    padding: 14px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  #Contact-{{ section.id }} .ct__status svg {
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    margin-top: 1px;
+  }
+
+  #Contact-{{ section.id }} .ct__status--ok {
+    background-color: var(--ct-black);
+    color: var(--ct-white);
+  }
+
+  #Contact-{{ section.id }} .ct__status--error {
+    border: 1px solid var(--ct-black);
+    background-color: var(--ct-field);
+    color: var(--ct-black);
+  }
+
+  #Contact-{{ section.id }} .ct__status ul {
+    margin: 4px 0 0;
+    padding-left: 18px;
+  }
+
+  /* Animation feel */
+  #Contact-{{ section.id }} .ct__reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s cubic-bezier(0.22, 0.61, 0.36, 1),
+                transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  #Contact-{{ section.id }}.is-visible .ct__reveal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #Contact-{{ section.id }}.is-visible .ct__reveal--2 { transition-delay: 0.08s; }
+  #Contact-{{ section.id }}.is-visible .ct__reveal--3 { transition-delay: 0.16s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #Contact-{{ section.id }} .ct__reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* Tablet */
+  @media screen and (max-width: 989px) {
+    #Contact-{{ section.id }} .ct__layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    #Contact-{{ section.id }} .ct__form-col {
+      order: -1;
+    }
+  }
+
+  /* Mobile */
+  @media screen and (max-width: 749px) {
+    #Contact-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px;
+    }
+
+    #Contact-{{ section.id }} .ct__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    #Contact-{{ section.id }} .ct__info-row {
+      padding: 18px 16px;
+      gap: 14px;
+    }
+
+    #Contact-{{ section.id }} .ct__info-head {
+      padding: 18px 16px 16px;
+    }
+
+    #Contact-{{ section.id }} .ct__foot {
+      align-items: stretch;
+    }
+
+    #Contact-{{ section.id }} .ct__btn {
+      width: 100%;
+    }
+  }
+{% endstyle %}
+
+<section
+  id="Contact-{{ section.id }}"
+  class="bytefied-contact"
+  {% if section.settings.title != blank %}
+    aria-label="{{ section.settings.title | strip_html | escape }}"
+  {% endif %}
+>
+  <div class="container">
+    {%- if section.settings.title != blank or section.settings.subtitle != blank -%}
+      <div class="ct__head ct__reveal">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="ct__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h1 class="ct__title">{{ section.settings.title }}</h1>
+        {%- endif -%}
+        {%- if section.settings.subtitle != blank -%}
+          <div class="ct__sub">{{ section.settings.subtitle }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="ct__layout">
+      {%- if has_info -%}
+        <div class="ct__info ct__reveal ct__reveal--2">
+          <div class="ct__info-box">
+            {%- if section.settings.info_title != blank or section.settings.info_text != blank -%}
+              <div class="ct__info-head">
+                {%- if section.settings.info_title != blank -%}
+                  <span class="ct__info-head-title">{{ section.settings.info_title | escape }}</span>
+                {%- endif -%}
+                {%- if section.settings.info_text != blank -%}
+                  <span class="ct__info-head-text">{{ section.settings.info_text | escape }}</span>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+            {%- for block in section.blocks -%}
+              {%- liquid
+                assign tag = 'div'
+                if block.settings.link != blank
+                  assign tag = 'a'
+                endif
+              -%}
+              <{{ tag }}
+                class="ct__info-row"
+                {% if tag == 'a' %}
+                  href="{{ block.settings.link }}"
+                {% endif %}
+                {{ block.shopify_attributes }}
+              >
+                <span class="ct__info-icon" aria-hidden="true">
+                  {%- case block.settings.icon -%}
+                    {%- when 'mail' -%}
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="M4 7l8 6 8-6"/>
+                      </svg>
+                    {%- when 'phone' -%}
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M6.6 3.8h3l1.5 4-2 1.3a10 10 0 005.8 5.8l1.3-2 4 1.5v3a1.8 1.8 0 01-2 1.8A15.8 15.8 0 014.8 5.8a1.8 1.8 0 011.8-2z"/>
+                      </svg>
+                    {%- when 'clock' -%}
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>
+                      </svg>
+                    {%- when 'truck' -%}
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M3.5 6.5h10v9.7h-10z"/><path d="M13.5 9.8h3.6l2.9 3v3.4h-6.5"/><circle cx="7.2" cy="17.4" r="1.7"/><circle cx="16.4" cy="17.4" r="1.7"/>
+                      </svg>
+                    {%- when 'chat' -%}
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M4 5.6h16v10.2H9.8L4.6 19.8l.4-4H4z"/><path d="M8.4 10.7h7.2"/>
+                      </svg>
+                    {%- when 'instagram' -%}
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.8"/><path d="M17.2 6.8h.01"/>
+                      </svg>
+                    {%- else -%}
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M12 3.2l7 2.9v5.4c0 4.2-2.9 7.9-7 9.3-4.1-1.4-7-5.1-7-9.3V6.1l7-2.9z"/><path d="M8.9 12.1l2.1 2.1 4.1-4.2"/>
+                      </svg>
+                  {%- endcase -%}
+                </span>
+                <span class="ct__info-body">
+                  {%- if block.settings.title != blank -%}
+                    <span class="ct__info-title">{{ block.settings.title | escape }}</span>
+                  {%- endif -%}
+                  {%- if block.settings.text != blank -%}
+                    <span class="ct__info-text">{{ block.settings.text | escape }}</span>
+                  {%- endif -%}
+                </span>
+
+                {%- if tag == 'a' -%}
+                  <span class="ct__info-arrow" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M9 5.5l6.5 6.5L9 18.5"/>
+                    </svg>
+                  </span>
+                {%- endif -%}
+              </{{ tag }}>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      <div class="ct__form-col ct__reveal ct__reveal--3">
+        <div class="ct__card">
+          {%- form 'contact', id: 'ContactForm-{{ section.id }}', class: 'ct__form', data-ct-form: '' -%}
+            {%- if form.posted_successfully? -%}
+              <div class="ct__status ct__status--ok" role="status" tabindex="-1" data-ct-status>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.3 2.3 4.7-4.8"/>
+                </svg>
+                <span>{{ section.settings.success_message | escape }}</span>
+              </div>
+            {%- elsif form.errors -%}
+              <div class="ct__status ct__status--error" role="alert" tabindex="-1" data-ct-status>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="9"/><path d="M12 7.8v5M12 16.2h.01"/>
+                </svg>
+                <span>
+                  Please check the fields below.
+                  <ul>
+                    {%- for field in form.errors -%}
+                      <li>
+                        {{ form.errors.translated_fields[field] | capitalize }}
+                        {{ form.errors.messages[field] }}
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </span>
+              </div>
+            {%- endif -%}
+
+            <div class="ct__grid">
+              <div class="ct__field ct__full">
+                <input
+                  id="CtName-{{ section.id }}"
+                  class="ct__input"
+                  type="text"
+                  name="contact[name]"
+                  autocomplete="name"
+                  placeholder=" "
+                  value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+                  required
+                >
+                <label class="ct__label" for="CtName-{{ section.id }}">Name <span class="ct__req">*</span></label>
+              </div>
+
+              <div class="ct__field">
+                <input
+                  id="CtEmail-{{ section.id }}"
+                  class="ct__input"
+                  type="email"
+                  name="contact[email]"
+                  autocomplete="email"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  placeholder=" "
+                  value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+                  required
+                >
+                <label class="ct__label" for="CtEmail-{{ section.id }}">Email <span class="ct__req">*</span></label>
+              </div>
+
+              <div class="ct__field">
+                <input
+                  id="CtPhone-{{ section.id }}"
+                  class="ct__input"
+                  type="tel"
+                  name="contact[phone]"
+                  autocomplete="tel"
+                  pattern="[0-9\-\+\s\(\)]*"
+                  placeholder=" "
+                  value="{{ form.phone }}"
+                >
+                <label class="ct__label" for="CtPhone-{{ section.id }}">Phone number</label>
+              </div>
+
+              {%- if section.settings.show_order_field -%}
+                <div class="ct__field ct__full">
+                  <input
+                    id="CtOrder-{{ section.id }}"
+                    class="ct__input"
+                    type="text"
+                    name="contact[order_number]"
+                    placeholder=" "
+                    value="{{ form.order_number }}"
+                  >
+                  <label class="ct__label" for="CtOrder-{{ section.id }}">Order number</label>
+                </div>
+              {%- endif -%}
+
+              {%- if section.settings.show_topic_field -%}
+                <div class="ct__field ct__full">
+                  <select
+                    id="CtTopic-{{ section.id }}"
+                    class="ct__input"
+                    name="contact[topic]"
+                    style="padding-top:22px;cursor:pointer;"
+                  >
+                    {%- assign topics = section.settings.topics | newline_to_br | split: '<br />' -%}
+                    {%- for topic in topics -%}
+                      {%- assign t = topic | strip -%}
+                      {%- if t != blank -%}
+                        <option value="{{ t | escape }}">{{ t | escape }}</option>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </select>
+                  <label
+                    class="ct__label"
+                    for="CtTopic-{{ section.id }}"
+                    style="transform:translateY(-10px) scale(0.78);color:#1c1a17;"
+                    >What is this about</label
+                  >
+                </div>
+              {%- endif -%}
+
+              <div class="ct__field ct__full">
+                <textarea
+                  id="CtMessage-{{ section.id }}"
+                  class="ct__input"
+                  name="contact[body]"
+                  rows="6"
+                  placeholder=" "
+                  required
+                >{{ form.body }}</textarea>
+                <label class="ct__label" for="CtMessage-{{ section.id }}">Message <span class="ct__req">*</span></label>
+              </div>
+            </div>
+
+            <div class="ct__foot">
+              <button type="submit" class="ct__btn" data-ct-submit>
+                <span>{{ section.settings.button_label | escape }}</span>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M4 12h16M14 6l6 6-6 6"/>
+                </svg>
+              </button>
+
+              {%- if section.settings.legal_text != blank -%}
+                <div class="ct__legal">{{ section.settings.legal_text }}</div>
+              {%- endif -%}
+            </div>
+          {%- endform -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('Contact-{{ section.id }}');
+    if (!root) return;
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              io.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+      io.observe(root);
+    } else {
+      root.classList.add('is-visible');
+    }
+
+    var status = root.querySelector('[data-ct-status]');
+    if (status) {
+      root.classList.add('is-visible');
+      var top = status.getBoundingClientRect().top + window.pageYOffset - 120;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+      status.focus({ preventScroll: true });
+    }
+
+    var form = root.querySelector('[data-ct-form]');
+    var submit = root.querySelector('[data-ct-submit]');
+    if (form && submit) {
+      form.addEventListener('submit', function () {
+        if (form.checkValidity()) submit.disabled = true;
+      });
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Contact Form",
+  "tag": "section",
+  "class": "bytefied-contact-section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small label above the title",
+      "default": "Customer care"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Title",
+      "default": "Contact us"
+    },
+    {
+      "type": "richtext",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "<p>Have a question about an order, or want help picking your next scent? Send us a note and a real person will reply.</p>"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Title max size",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "title_gap",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Space under the heading",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "split", "label": "Info cards beside the form" },
+        { "value": "center", "label": "Form only, centered" }
+      ],
+      "default": "split"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Section background",
+      "options": [
+        { "value": "grey", "label": "Light grey section, white cards" },
+        { "value": "white", "label": "White section, light grey cards" }
+      ],
+      "default": "grey"
+    },
+    {
+      "type": "text",
+      "id": "info_title",
+      "label": "Info box title",
+      "info": "Small heading on the dark strip above the info rows. Leave blank to hide it.",
+      "default": "Ways to reach us"
+    },
+    {
+      "type": "text",
+      "id": "info_text",
+      "label": "Info box small line"
+    },
+    {
+      "type": "range",
+      "id": "form_width",
+      "min": 560,
+      "max": 960,
+      "step": 20,
+      "unit": "px",
+      "label": "Form width when centered",
+      "default": 820
+    },
+    {
+      "type": "header",
+      "content": "Form"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_order_field",
+      "label": "Show order number field",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_topic_field",
+      "label": "Show topic dropdown",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "topics",
+      "label": "Topic options",
+      "info": "One option per line.",
+      "default": "Order or shipping question\nScent recommendation\nSamples and decants\nReturns and refunds\nSomething else"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Send message"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thanks for reaching out. We will get back to you within one business day."
+    },
+    {
+      "type": "richtext",
+      "id": "legal_text",
+      "label": "Small print next to the button",
+      "default": "<p>This site is protected by hCaptcha and its Privacy Policy and Terms of Service apply.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 24,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 24,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 88
+    }
+  ],
+  "blocks": [
+    {
+      "type": "info",
+      "name": "Info card",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "mail", "label": "Email" },
+            { "value": "phone", "label": "Phone" },
+            { "value": "clock", "label": "Hours" },
+            { "value": "truck", "label": "Shipping" },
+            { "value": "chat", "label": "Chat" },
+            { "value": "instagram", "label": "Instagram" },
+            { "value": "shield", "label": "Shield" }
+          ],
+          "default": "mail"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Email us"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Optional. Makes the whole card clickable."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Form",
+      "category": "Bytefied",
+      "blocks": [
+        {
+          "type": "info",
+          "settings": {
+            "icon": "mail",
+            "title": "Email us",
+            "text": "Add your support email here"
+          }
+        },
+        {
+          "type": "info",
+          "settings": {
+            "icon": "clock",
+            "title": "Reply time",
+            "text": "Most messages get an answer within one business day"
+          }
+        },
+        {
+          "type": "info",
+          "settings": {
+            "icon": "truck",
+            "title": "Shipping",
+            "text": "Orders leave within two business days and ship free over $125"
+          }
+        },
+        {
+          "type": "info",
+          "settings": {
+            "icon": "instagram",
+            "title": "Follow along",
+            "text": "@samsfragranceshop"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

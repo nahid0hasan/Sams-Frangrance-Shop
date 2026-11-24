@@ -1,0 +1,40 @@
+{%- comment -%}
+  Outputs the product's brand name. Brands live in collections here (every
+  product shares one vendor), so the brand is the first of the product's
+  collections that is not on the "Collections that are not brands" list in
+  theme settings > Product cards. Outputs nothing when no brand is found.
+
+  Accepts:
+  - product: {Object} the product
+  - link: {Boolean} wrap the name in a link to the brand collection
+
+  Usage:
+  {% capture brand %}{% render 'product-brand', product: product %}{% endcapture %}
+{%- endcomment -%}
+{%- liquid
+  assign skip_handles = settings.non_brand_collections | downcase | newline_to_br | replace: '<br />', ',' | split: ','
+  assign skip_list = '|'
+  for h in skip_handles
+    assign h_clean = h | strip
+    if h_clean != blank
+      assign skip_list = skip_list | append: h_clean | append: '|'
+    endif
+  endfor
+
+  assign brand_col = null
+  for c in product.collections
+    assign c_key = '|' | append: c.handle | append: '|'
+    if skip_list contains c_key
+      continue
+    endif
+    assign brand_col = c
+    break
+  endfor
+-%}
+{%- if brand_col != null -%}
+  {%- if link -%}
+    <a href="{{ brand_col.url }}">{{ brand_col.title | escape }}</a>
+  {%- else -%}
+    {{- brand_col.title | escape -}}
+  {%- endif -%}
+{%- endif -%}

@@ -1,0 +1,1229 @@
+{%- liquid
+  assign scheme = section.settings.color_scheme
+  assign handle = section.settings.handle | strip
+  assign handle_link = section.settings.handle_link
+  assign profile_name = handle | remove_first: '@'
+  assign profile_initial = profile_name | slice: 0 | upcase
+  assign link_label = section.settings.link_label | default: 'View on Instagram'
+-%}
+
+{% style %}
+  #VideoGrid-{{ section.id }} {
+    --vg-black: #1c1a17;
+    --vg-white: #ffffff;
+    --vg-grey: #fafafb;
+    --vg-border: #e5e5e3;
+    --vg-muted: #6b6b68;
+    --vg-font: 'Geist', 'Geist Sans', 'GeistVF', -apple-system, system-ui, sans-serif;
+
+    {% if scheme == 'grey' %}
+      --vg-bg: #fafafb;
+      --vg-card: #ffffff;
+    {% else %}
+      --vg-bg: #ffffff;
+      --vg-card: #fafafb;
+    {% endif %}
+
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--vg-bg);
+    color: var(--vg-black);
+    font-family: var(--vg-font);
+
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  #VideoGrid-{{ section.id }},
+  #VideoGrid-{{ section.id }} * {
+    font-family: var(--vg-font) !important;
+    box-sizing: border-box;
+  }
+
+  #VideoGrid-{{ section.id }} .container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* Head */
+  #VideoGrid-{{ section.id }} .vg__head {
+    margin: 0 0 {{ section.settings.title_gap }}px;
+    text-align: {{ section.settings.title_alignment }};
+  }
+
+  #VideoGrid-{{ section.id }} .vg__title {
+    margin: 0;
+    font-size: clamp(1.625rem, 3.2vw, {{ section.settings.title_size | divided_by: 16.0 }}rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--vg-black);
+  }
+
+  #VideoGrid-{{ section.id }} .vg__title-handle {
+    display: block;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__subtitle {
+    margin: 12px 0 0;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--vg-muted);
+  }
+
+  #VideoGrid-{{ section.id }} .vg__subtitle p {
+    margin: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  /* Grid */
+  #VideoGrid-{{ section.id }} .vg__grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, minmax(0, 1fr));
+    gap: {{ section.settings.gap }}px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__item {
+    margin: 0;
+    min-width: 0;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__card {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: {{ section.settings.aspect_ratio }};
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border-radius: {{ section.settings.radius }}px;
+    border: 1px solid var(--vg-border);
+    background-color: var(--vg-card);
+    color: var(--vg-white);
+    font: inherit;
+    text-align: left;
+    appearance: none;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #VideoGrid-{{ section.id }} div.vg__card {
+    cursor: default;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__card:hover {
+    border-color: #d4d4d1;
+    box-shadow: 0 10px 28px rgba(28, 26, 23, 0.12);
+  }
+
+  #VideoGrid-{{ section.id }} .vg__card:focus-visible {
+    outline: 2px solid var(--vg-black);
+    outline-offset: 3px;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__card video,
+  #VideoGrid-{{ section.id }} .vg__card img,
+  #VideoGrid-{{ section.id }} .vg__card svg.vg__placeholder {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  #VideoGrid-{{ section.id }} .vg__card svg.vg__placeholder {
+    fill: #d4d4d1;
+    background-color: var(--vg-card);
+  }
+
+  #VideoGrid-{{ section.id }} .vg__card:hover video {
+    transform: scale(1.03);
+  }
+
+  /* Soft shade so the play icon reads on bright frames */
+  #VideoGrid-{{ section.id }} .vg__card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(28, 26, 23, 0) 55%, rgba(28, 26, 23, 0.28) 100%);
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__card.is-playing::after {
+    opacity: 0;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.92);
+    color: var(--vg-black);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 14px rgba(28, 26, 23, 0.18);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__play svg {
+    width: 16px;
+    height: 16px;
+    margin-left: 2px;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__card.is-playing .vg__play {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.85);
+  }
+
+  /* Foot */
+  #VideoGrid-{{ section.id }} .vg__foot {
+    margin-top: 20px;
+    text-align: {{ section.settings.handle_alignment }};
+  }
+
+  #VideoGrid-{{ section.id }} .vg__handle {
+    display: inline-block;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--vg-black);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--vg-black);
+    text-decoration: none;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  #VideoGrid-{{ section.id }} a.vg__handle:hover {
+    color: var(--vg-muted);
+    border-color: var(--vg-muted);
+  }
+
+  #VideoGrid-{{ section.id }} a.vg__handle:focus-visible {
+    outline: 2px solid var(--vg-black);
+    outline-offset: 3px;
+  }
+
+  /* Popup */
+  #VideoGrid-{{ section.id }} .vg__modal {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--vg-black);
+    overflow: hidden;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__modal:not([open]) {
+    display: none;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__modal[open] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: vgFade-{{ section.id }} 0.25s ease;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__modal::backdrop {
+    background-color: rgba(28, 26, 23, 0.86);
+  }
+
+  @keyframes vgFade-{{ section.id }} {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  #VideoGrid-{{ section.id }} .vg__modal-box {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    width: min(1000px, calc(100% - 160px));
+    height: min(850px, calc(100dvh - 80px));
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--vg-white);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+    animation: vgRise-{{ section.id }} 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @keyframes vgRise-{{ section.id }} {
+    from { transform: translateY(16px) scale(0.98); }
+    to { transform: none; }
+  }
+
+  #VideoGrid-{{ section.id }} .vg__modal-media {
+    position: relative;
+    min-height: 0;
+    background-color: var(--vg-black);
+  }
+
+  #VideoGrid-{{ section.id }} .vg__modal-media video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    cursor: pointer;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__mute {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 2;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background-color: rgba(28, 26, 23, 0.55);
+    color: var(--vg-white);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__icon-btn:hover {
+    background-color: rgba(28, 26, 23, 0.8);
+  }
+
+  #VideoGrid-{{ section.id }} .vg__icon-btn:focus-visible {
+    outline: 2px solid var(--vg-white);
+    outline-offset: 2px;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__icon-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__mute .vg__icon-on,
+  #VideoGrid-{{ section.id }} .vg__mute.is-muted .vg__icon-off {
+    display: none;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__mute.is-muted .vg__icon-on {
+    display: block;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__modal-info {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background-color: var(--vg-white);
+  }
+
+  #VideoGrid-{{ section.id }} .vg__profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--vg-border);
+  }
+
+  #VideoGrid-{{ section.id }} .vg__avatar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid var(--vg-border);
+    background-color: var(--vg-grey);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--vg-black);
+  }
+
+  #VideoGrid-{{ section.id }} .vg__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__profile-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--vg-black);
+    text-decoration: none;
+  }
+
+  #VideoGrid-{{ section.id }} a.vg__profile-name:hover {
+    color: var(--vg-muted);
+  }
+
+  #VideoGrid-{{ section.id }} .vg__caption {
+    flex: 1 1 auto;
+    min-height: 0;
+    margin: 0;
+    padding: 28px 26px;
+    overflow-y: auto;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--vg-muted);
+    overscroll-behavior: contain;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__meta {
+    padding: 14px 18px;
+    border-top: 1px solid var(--vg-border);
+    font-size: 12px;
+    line-height: 1.4;
+    text-align: center;
+    color: var(--vg-muted);
+  }
+
+  #VideoGrid-{{ section.id }} .vg__meta:empty {
+    display: none;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__meta a {
+    color: var(--vg-black);
+    text-decoration: none;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__meta a:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__close,
+  #VideoGrid-{{ section.id }} .vg__nav {
+    position: fixed;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--vg-white);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__close:hover,
+  #VideoGrid-{{ section.id }} .vg__nav:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+  }
+
+  #VideoGrid-{{ section.id }} .vg__close:focus-visible,
+  #VideoGrid-{{ section.id }} .vg__nav:focus-visible {
+    outline: 2px solid var(--vg-white);
+    outline-offset: 2px;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__close {
+    top: 20px;
+    right: 20px;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__close svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__nav {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  #VideoGrid-{{ section.id }} .vg__nav svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__nav--prev {
+    left: 16px;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__nav--next {
+    right: 16px;
+  }
+
+  #VideoGrid-{{ section.id }} .vg__nav[hidden] {
+    display: none;
+  }
+
+  /* Reveal */
+  #VideoGrid-{{ section.id }} .vg__reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  #VideoGrid-{{ section.id }}.is-visible .vg__reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #VideoGrid-{{ section.id }} .vg__reveal,
+    #VideoGrid-{{ section.id }} .vg__card video {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    #VideoGrid-{{ section.id }} .vg__modal[open],
+    #VideoGrid-{{ section.id }} .vg__modal-box {
+      animation: none;
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    #VideoGrid-{{ section.id }} .vg__grid {
+      grid-template-columns: repeat({{ section.settings.columns_tablet }}, minmax(0, 1fr));
+    }
+
+    #VideoGrid-{{ section.id }} .vg__modal-box {
+      width: min(760px, calc(100% - 120px));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    #VideoGrid-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top | times: 0.7 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.7 | round }}px;
+    }
+
+    #VideoGrid-{{ section.id }} .vg__head {
+      margin-bottom: {{ section.settings.title_gap | times: 0.7 | round }}px;
+    }
+
+    #VideoGrid-{{ section.id }} .vg__grid {
+      grid-template-columns: repeat({{ section.settings.columns_mobile }}, minmax(0, 1fr));
+      gap: {{ section.settings.gap | times: 0.6 | round }}px;
+    }
+
+    #VideoGrid-{{ section.id }} .vg__card {
+      border-radius: {{ section.settings.radius | times: 0.75 | round }}px;
+    }
+
+    #VideoGrid-{{ section.id }} .vg__play {
+      width: 30px;
+      height: 30px;
+    }
+
+    #VideoGrid-{{ section.id }} .vg__play svg {
+      width: 11px;
+      height: 11px;
+    }
+
+    #VideoGrid-{{ section.id }} .vg__foot {
+      margin-top: 16px;
+    }
+
+    /* Popup goes full screen, video on top and details below */
+    #VideoGrid-{{ section.id }} .vg__modal-box {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: minmax(0, 1fr) auto;
+      width: 100%;
+      height: 100dvh;
+      border-radius: 0;
+    }
+
+    #VideoGrid-{{ section.id }} .vg__modal-info {
+      max-height: 38dvh;
+    }
+
+    #VideoGrid-{{ section.id }} .vg__caption {
+      padding: 16px 18px;
+      font-size: 14px;
+    }
+
+    #VideoGrid-{{ section.id }} .vg__profile {
+      padding: 12px 16px;
+    }
+
+    #VideoGrid-{{ section.id }} .vg__avatar {
+      width: 36px;
+      height: 36px;
+      font-size: 15px;
+    }
+
+    #VideoGrid-{{ section.id }} .vg__close,
+    #VideoGrid-{{ section.id }} .vg__nav {
+      width: 40px;
+      height: 40px;
+      background-color: rgba(28, 26, 23, 0.55);
+    }
+
+    #VideoGrid-{{ section.id }} .vg__close:hover,
+    #VideoGrid-{{ section.id }} .vg__nav:hover {
+      background-color: rgba(28, 26, 23, 0.8);
+    }
+
+    #VideoGrid-{{ section.id }} .vg__close {
+      top: 12px;
+      right: 12px;
+    }
+
+    #VideoGrid-{{ section.id }} .vg__close svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    #VideoGrid-{{ section.id }} .vg__nav {
+      top: 31dvh;
+    }
+
+    #VideoGrid-{{ section.id }} .vg__nav svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    #VideoGrid-{{ section.id }} .vg__nav--prev {
+      left: 10px;
+    }
+
+    #VideoGrid-{{ section.id }} .vg__nav--next {
+      right: 10px;
+    }
+
+    #VideoGrid-{{ section.id }} .vg__mute {
+      top: 12px;
+      left: 12px;
+    }
+  }
+{% endstyle %}
+
+<section id="VideoGrid-{{ section.id }}" class="bytefied-video-grid">
+  <div class="container">
+    {%- if section.settings.title != blank or handle != blank or section.settings.subtitle != blank -%}
+      <div class="vg__head vg__reveal">
+        {%- if section.settings.title != blank or handle != blank -%}
+          <h2 class="vg__title">
+            {{ section.settings.title }}
+            {%- if section.settings.handle_in_title and handle != blank -%}
+              <span class="vg__title-handle">{{ handle | escape }}</span>
+            {%- endif -%}
+          </h2>
+        {%- endif -%}
+        {%- if section.settings.subtitle != blank -%}
+          <div class="vg__subtitle">{{ section.settings.subtitle }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <ul class="vg__grid vg__reveal" role="list">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign v = block.settings.video
+          assign label = block.settings.label | default: section.settings.title | strip_html | escape
+        -%}
+        <li class="vg__item" {{ block.shopify_attributes }}>
+          {%- if v != blank -%}
+            <button
+              type="button"
+              class="vg__card"
+              data-vg-card
+              aria-haspopup="dialog"
+              aria-label="{{ label }}"
+            >
+              {{
+                v
+                | video_tag:
+                  image_size: '600x',
+                  autoplay: false,
+                  loop: true,
+                  muted: true,
+                  controls: false,
+                  playsinline: true,
+                  preload: 'none'
+              }}
+              <span class="vg__play" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11a.5.5 0 0 0 .76.43l9-5.5a.5.5 0 0 0 0-.86l-9-5.5A.5.5 0 0 0 4 2.5Z"/></svg>
+              </span>
+            </button>
+
+            <template data-vg-caption>
+              {%- if block.settings.caption != blank -%}
+                {{- block.settings.caption | escape | newline_to_br -}}
+              {%- endif -%}
+            </template>
+            <template data-vg-meta>
+              {%- if block.settings.date != blank -%}
+                <span>{{ block.settings.date | escape }}</span>
+              {%- endif -%}
+              {%- if block.settings.date != blank and block.settings.link != blank -%}
+                <span aria-hidden="true"> &bull; </span>
+              {%- endif -%}
+              {%- if block.settings.link != blank -%}
+                <a href="{{ block.settings.link }}" target="_blank" rel="noopener">{{ link_label | escape }}</a>
+              {%- endif -%}
+            </template>
+          {%- else -%}
+            <div class="vg__card">
+              {{ 'product-apparel-1' | placeholder_svg_tag: 'vg__placeholder' }}
+              <span class="vg__play" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11a.5.5 0 0 0 .76.43l9-5.5a.5.5 0 0 0 0-.86l-9-5.5A.5.5 0 0 0 4 2.5Z"/></svg>
+              </span>
+            </div>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    {%- if handle != blank -%}
+      <div class="vg__foot vg__reveal">
+        {%- if handle_link != blank -%}
+          <a class="vg__handle" href="{{ handle_link }}" target="_blank" rel="noopener">{{ handle | escape }}</a>
+        {%- else -%}
+          <span class="vg__handle">{{ handle | escape }}</span>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <dialog class="vg__modal" data-vg-modal aria-label="{{ section.settings.title | strip_html | default: 'Video' | escape }}">
+    <button type="button" class="vg__close" data-vg-close aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <button type="button" class="vg__nav vg__nav--prev" data-vg-prev aria-label="Previous video">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <button type="button" class="vg__nav vg__nav--next" data-vg-next aria-label="Next video">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+
+    <div class="vg__modal-box">
+      <div class="vg__modal-media" data-vg-media>
+        <button type="button" class="vg__icon-btn vg__mute is-muted" data-vg-mute aria-label="Unmute" aria-pressed="false">
+          <svg class="vg__icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M22 9l-6 6M16 9l6 6"/></svg>
+          <svg class="vg__icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+        </button>
+      </div>
+
+      <div class="vg__modal-info">
+        {%- if profile_name != blank or section.settings.avatar != blank -%}
+          <div class="vg__profile">
+            <span class="vg__avatar" aria-hidden="true">
+              {%- if section.settings.avatar != blank -%}
+                {{ section.settings.avatar | image_url: width: 120 | image_tag: loading: 'lazy', alt: '' }}
+              {%- else -%}
+                {{ profile_initial }}
+              {%- endif -%}
+            </span>
+            {%- if profile_name != blank -%}
+              {%- if handle_link != blank -%}
+                <a class="vg__profile-name" href="{{ handle_link }}" target="_blank" rel="noopener">{{ profile_name | escape }}</a>
+              {%- else -%}
+                <span class="vg__profile-name">{{ profile_name | escape }}</span>
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+        <p class="vg__caption" data-vg-caption-out></p>
+        <div class="vg__meta" data-vg-meta-out></div>
+      </div>
+    </div>
+  </dialog>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('VideoGrid-{{ section.id }}');
+    if (!root) return;
+
+    var hasIO = 'IntersectionObserver' in window;
+
+    if (hasIO) {
+      var revealIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            root.classList.add('is-visible');
+            revealIO.disconnect();
+          }
+        });
+      }, { threshold: 0.1 });
+      revealIO.observe(root);
+    } else {
+      root.classList.add('is-visible');
+    }
+
+    var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var autoplayMobile = {{ section.settings.autoplay_mobile | json }} && !reduceMotion;
+    var cards = Array.prototype.slice.call(root.querySelectorAll('[data-vg-card]'));
+    var modalOpen = false;
+
+    function play(card) {
+      if (modalOpen) return;
+      var video = card.querySelector('video');
+      if (!video) return;
+      if (video.preload !== 'metadata' && video.preload !== 'auto') video.preload = 'metadata';
+      var p = video.play();
+      card.classList.add('is-playing');
+      if (p && p.catch) {
+        p.catch(function () {
+          card.classList.remove('is-playing');
+        });
+      }
+    }
+
+    function stop(card, reset) {
+      var video = card.querySelector('video');
+      if (!video) return;
+      video.pause();
+      if (reset) video.currentTime = 0;
+      card.classList.remove('is-playing');
+    }
+
+    cards.forEach(function (card) {
+      var video = card.querySelector('video');
+      video.muted = true;
+      video.setAttribute('muted', '');
+      video.setAttribute('playsinline', '');
+
+      if (canHover) {
+        card.addEventListener('mouseenter', function () { play(card); });
+        card.addEventListener('mouseleave', function () { stop(card, true); });
+        card.addEventListener('focus', function () { play(card); });
+        card.addEventListener('blur', function () { stop(card, true); });
+      }
+    });
+
+    // Touch screens have no hover, so play what is on screen instead
+    var visible = [];
+    if (!canHover && autoplayMobile && hasIO) {
+      var playIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          var i = visible.indexOf(entry.target);
+          if (entry.isIntersecting) {
+            if (i === -1) visible.push(entry.target);
+            play(entry.target);
+          } else {
+            if (i !== -1) visible.splice(i, 1);
+            stop(entry.target, false);
+          }
+        });
+      }, { threshold: 0.6 });
+      cards.forEach(function (card) { playIO.observe(card); });
+    }
+
+    /* Popup */
+    var modal = root.querySelector('[data-vg-modal]');
+    if (!modal || !cards.length) return;
+
+    var media = modal.querySelector('[data-vg-media]');
+    var captionOut = modal.querySelector('[data-vg-caption-out]');
+    var metaOut = modal.querySelector('[data-vg-meta-out]');
+    var muteBtn = modal.querySelector('[data-vg-mute]');
+    var prevBtn = modal.querySelector('[data-vg-prev]');
+    var nextBtn = modal.querySelector('[data-vg-next]');
+    var current = -1;
+    var muted = true;
+    var popupVideo = null;
+    var lastFocus = null;
+
+    prevBtn.hidden = cards.length < 2;
+    nextBtn.hidden = cards.length < 2;
+
+    function setMuted(value) {
+      muted = value;
+      if (popupVideo) popupVideo.muted = muted;
+      muteBtn.classList.toggle('is-muted', muted);
+      muteBtn.setAttribute('aria-pressed', String(!muted));
+      muteBtn.setAttribute('aria-label', muted ? 'Unmute' : 'Mute');
+    }
+
+    function clearVideo() {
+      if (!popupVideo) return;
+      popupVideo.pause();
+      popupVideo.removeAttribute('src');
+      popupVideo.remove();
+      popupVideo = null;
+    }
+
+    function show(index) {
+      var total = cards.length;
+      current = (index + total) % total;
+      var card = cards[current];
+      var li = card.parentNode;
+
+      clearVideo();
+      popupVideo = card.querySelector('video').cloneNode(true);
+      popupVideo.removeAttribute('class');
+      popupVideo.removeAttribute('style');
+      popupVideo.preload = 'auto';
+      popupVideo.loop = true;
+      popupVideo.muted = muted;
+      popupVideo.playsInline = true;
+      popupVideo.addEventListener('click', function () {
+        if (popupVideo.paused) {
+          popupVideo.play();
+        } else {
+          popupVideo.pause();
+        }
+      });
+      media.insertBefore(popupVideo, muteBtn);
+      var p = popupVideo.play();
+      if (p && p.catch) {
+        p.catch(function () {
+          // Sound blocked, retry muted
+          setMuted(true);
+          popupVideo && popupVideo.play();
+        });
+      }
+
+      var cap = li.querySelector('template[data-vg-caption]');
+      var meta = li.querySelector('template[data-vg-meta]');
+      captionOut.innerHTML = cap ? cap.innerHTML.trim() : '';
+      captionOut.hidden = captionOut.innerHTML === '';
+      metaOut.innerHTML = meta ? meta.innerHTML.trim() : '';
+    }
+
+    function open(index) {
+      lastFocus = document.activeElement;
+      modalOpen = true;
+      cards.forEach(function (card) { stop(card, false); });
+      document.documentElement.style.overflow = 'hidden';
+      if (typeof modal.showModal === 'function') {
+        modal.showModal();
+      } else {
+        modal.setAttribute('open', '');
+      }
+      show(index);
+    }
+
+    function close() {
+      if (typeof modal.close === 'function' && modal.open) {
+        modal.close();
+      } else {
+        modal.removeAttribute('open');
+        onClosed();
+      }
+    }
+
+    function onClosed() {
+      clearVideo();
+      modalOpen = false;
+      document.documentElement.style.overflow = '';
+      visible.forEach(function (card) { play(card); });
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    cards.forEach(function (card, i) {
+      card.addEventListener('click', function () { open(i); });
+    });
+
+    modal.addEventListener('close', onClosed);
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) close();
+    });
+    modal.querySelector('[data-vg-close]').addEventListener('click', close);
+    prevBtn.addEventListener('click', function () { show(current - 1); });
+    nextBtn.addEventListener('click', function () { show(current + 1); });
+    muteBtn.addEventListener('click', function () { setMuted(!muted); });
+
+    modal.addEventListener('keydown', function (e) {
+      if (cards.length < 2) return;
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        show(current - 1);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        show(current + 1);
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Video grid",
+  "tag": "section",
+  "class": "bytefied-video-grid-section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Title",
+      "default": "Follow us on Instagram"
+    },
+    {
+      "type": "richtext",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "select",
+      "id": "title_alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 24,
+      "max": 56,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "title_gap",
+      "label": "Space below heading",
+      "min": 12,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Instagram profile"
+    },
+    {
+      "type": "text",
+      "id": "handle",
+      "label": "Handle",
+      "info": "For example @yourstore. Also used as the name in the popup."
+    },
+    {
+      "type": "url",
+      "id": "handle_link",
+      "label": "Profile link"
+    },
+    {
+      "type": "image_picker",
+      "id": "avatar",
+      "label": "Profile picture",
+      "info": "Shown in the popup. Square image, at least 120 px."
+    },
+    {
+      "type": "checkbox",
+      "id": "handle_in_title",
+      "label": "Show handle in the title",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "handle_alignment",
+      "label": "Link alignment below the videos",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Post link text in the popup",
+      "default": "View on Instagram"
+    },
+    {
+      "type": "header",
+      "content": "Grid"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "select",
+      "id": "columns_tablet",
+      "label": "Columns on tablet",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "Video shape",
+      "options": [
+        { "value": "9 / 16", "label": "Tall (9:16)" },
+        { "value": "3 / 4", "label": "Portrait (3:4)" },
+        { "value": "4 / 5", "label": "Portrait (4:5)" },
+        { "value": "1 / 1", "label": "Square" }
+      ],
+      "default": "3 / 4"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 4,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay_mobile",
+      "label": "Play videos on scroll on phones",
+      "info": "Phones have no hover, so videos play while they are on screen.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Background",
+      "options": [
+        { "value": "white", "label": "White" },
+        { "value": "grey", "label": "Light grey" }
+      ],
+      "default": "grey"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video",
+      "name": "Video",
+      "settings": [
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video",
+          "info": "Upload the MP4 file. Instagram or YouTube links can't play on hover."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Description",
+          "info": "Read by screen readers, for example \"Review of Azzaro The Most Wanted\""
+        },
+        {
+          "type": "header",
+          "content": "Popup"
+        },
+        {
+          "type": "textarea",
+          "id": "caption",
+          "label": "Caption",
+          "info": "Copy the Instagram caption here"
+        },
+        {
+          "type": "text",
+          "id": "date",
+          "label": "Date",
+          "info": "For example September 26"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Instagram post link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video grid",
+      "category": "Bytefied",
+      "blocks": [
+        { "type": "video" },
+        { "type": "video" },
+        { "type": "video" },
+        { "type": "video" },
+        { "type": "video" }
+      ]
+    }
+  ]
+}
+{% endschema %}

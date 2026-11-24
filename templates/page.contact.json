@@ -1,0 +1,96 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "bytefied_contact_3qfarY": {
+      "type": "bytefied-contact",
+      "blocks": {
+        "info_CXEhAd": {
+          "type": "info",
+          "settings": {
+            "icon": "mail",
+            "title": "Email us",
+            "text": "support@samsfragranceshop.com",
+            "link": "mailto:support@samsfragranceshop.com"
+          }
+        },
+        "info_QMKrM7": {
+          "type": "info",
+          "settings": {
+            "icon": "clock",
+            "title": "Reply time",
+            "text": "Most messages get an answer within one business day",
+            "link": ""
+          }
+        },
+        "info_BxazG3": {
+          "type": "info",
+          "settings": {
+            "icon": "truck",
+            "title": "Shipping",
+            "text": "Orders leave within two business days and ship free over $125",
+            "link": ""
+          }
+        },
+        "info_twwVqL": {
+          "type": "info",
+          "settings": {
+            "icon": "instagram",
+            "title": "Follow along",
+            "text": "@samsfragranceshop",
+            "link": "https://www.instagram.com/samsfragranceshop/"
+          }
+        }
+      },
+      "block_order": [
+        "info_CXEhAd",
+        "info_QMKrM7",
+        "info_BxazG3",
+        "info_twwVqL"
+      ],
+      "name": "Contact Form",
+      "settings": {
+        "eyebrow": "",
+        "title": "Contact us",
+        "subtitle": "<p>Have a question about an order, or want help picking your next scent? Send us a note and a real person will reply.</p>",
+        "title_size": 44,
+        "title_gap": 48,
+        "layout": "split",
+        "color_scheme": "white",
+        "info_title": "Ways to reach us",
+        "info_text": "",
+        "form_width": 820,
+        "show_order_field": true,
+        "show_topic_field": true,
+        "topics": "Order or shipping question\nScent recommendation\nSamples and decants\nReturns and refunds\nSomething else",
+        "button_label": "Send message",
+        "success_message": "Thanks for reaching out. We will get back to you within one business day.",
+        "legal_text": "<p>This site is protected by hCaptcha and its Privacy Policy and Terms of Service apply.</p>",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "background_color": "{{ settings.color_palette.background }}",
+        "padding-block-start": 40,
+        "padding-block-end": 0
+      }
+    }
+  },
+  "order": [
+    "bytefied_contact_3qfarY",
+    "main"
+  ]
+}

@@ -1,0 +1,625 @@
+{%- liquid
+  assign bg = section.settings.background_image
+  assign bg_mobile = section.settings.background_image_mobile
+  if bg_mobile == blank
+    assign bg_mobile = bg
+  endif
+
+  assign alt_text = section.settings.heading | strip_html | escape
+  if bg.alt != blank
+    assign alt_text = bg.alt | escape
+  endif
+
+  assign heading_tag = section.settings.heading_tag
+-%}
+
+{%- comment -%}
+  Geist is not in the theme font picker (theme is set to Inter), so load it here.
+{%- endcomment -%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap"
+>
+
+{% style %}
+  #ScentHero-{{ section.id }} {
+    --sh-black: #1c1a17;
+    --sh-white: #ffffff;
+    --sh-grey: #f5f5f4;
+    --sh-border: #e5e5e3;
+    --sh-muted: #6b6b68;
+    --sh-btn-hover: #3a3734;
+
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    isolation: isolate;
+    display: flex;
+    align-items: {{ section.settings.vertical_position }};
+    box-sizing: border-box;
+    background-color: var(--sh-grey);
+    font-family: 'Geist', -apple-system, system-ui, sans-serif;
+    color: var(--sh-black);
+
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+
+    {% if section.settings.height_type == 'viewport' %}
+      min-height: {{ section.settings.height_vh }}vh;
+    {% else %}
+      min-height: {{ section.settings.height_px }}px;
+    {% endif %}
+  }
+
+  /* Theme base styles target bare h1/p/a, so plain inheritance is not enough
+     to keep the hero on Geist. Pin the family on every descendant. */
+  #ScentHero-{{ section.id }} h1,
+  #ScentHero-{{ section.id }} h2,
+  #ScentHero-{{ section.id }} h3,
+  #ScentHero-{{ section.id }} p,
+  #ScentHero-{{ section.id }} a,
+  #ScentHero-{{ section.id }} span,
+  #ScentHero-{{ section.id }} div,
+  #ScentHero-{{ section.id }} li,
+  #ScentHero-{{ section.id }} strong,
+  #ScentHero-{{ section.id }} em {
+    font-family: 'Geist', -apple-system, system-ui, sans-serif;
+  }
+
+  /* Rich text settings output their own <p>, which the theme then styles at
+     14px/Inter. Make those wrappers transparent so the hero sizes win. */
+  #ScentHero-{{ section.id }} .scent-hero__title p,
+  #ScentHero-{{ section.id }} .scent-hero__text p {
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+  }
+
+  #ScentHero-{{ section.id }} .scent-hero__text p + p {
+    margin-top: 0.55em;
+  }
+
+  #ScentHero-{{ section.id }} .container {
+    max-width: 1440px;
+    width: 100%;
+    margin: 0 auto;
+    padding-left: 0;
+    padding-right: 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Media layer */
+  #ScentHero-{{ section.id }} .scent-hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  #ScentHero-{{ section.id }} .scent-hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #ScentHero-{{ section.id }} .scent-hero__img--desktop {
+    object-position: {{ section.settings.focal_desktop }};
+  }
+
+  #ScentHero-{{ section.id }} .scent-hero__img--mobile {
+    display: none;
+    object-position: {{ section.settings.focal_mobile }};
+  }
+
+  /* Readability scrim, neutral only */
+  #ScentHero-{{ section.id }} .scent-hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, {{ section.settings.overlay_opacity | divided_by: 100.0 }}) 0%,
+      rgba(255, 255, 255, {{ section.settings.overlay_opacity | times: 0.82 | divided_by: 100.0 }}) 34%,
+      rgba(255, 255, 255, 0) 66%
+    );
+  }
+
+  /* Content */
+  #ScentHero-{{ section.id }} .scent-hero__content {
+    max-width: {{ section.settings.content_width }}px;
+    width: 100%;
+    text-align: left;
+  }
+
+  #ScentHero-{{ section.id }} .scent-hero__eyebrow {
+    margin: 0 0 18px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sh-muted);
+  }
+
+  #ScentHero-{{ section.id }} .scent-hero__title {
+    margin: 0;
+    font-weight: 600;
+    font-size: clamp(2.6rem, 5.2vw, {{ section.settings.heading_size | divided_by: 16.0 }}rem);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    color: var(--sh-black);
+  }
+
+  #ScentHero-{{ section.id }} .scent-hero__text {
+    margin: 20px 0 0;
+    font-size: clamp(1.25rem, 1.2vw + 0.8rem, {{ section.settings.subheading_size | divided_by: 16.0 }}rem);
+    line-height: 1.5;
+    font-weight: 400;
+    color: var(--sh-muted);
+    max-width: 46ch;
+  }
+
+  #ScentHero-{{ section.id }} .scent-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 36px;
+  }
+
+  #ScentHero-{{ section.id }} .scent-hero__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 56px;
+    padding: 0 34px;
+    border-radius: 2px;
+    border: 1px solid var(--sh-black);
+    background-color: var(--sh-black);
+    color: var(--sh-white);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.28s ease, border-color 0.28s ease, transform 0.28s ease;
+  }
+
+  #ScentHero-{{ section.id }} .scent-hero__btn:hover {
+    background-color: var(--sh-btn-hover);
+    border-color: var(--sh-btn-hover);
+    transform: translateY(-1px);
+  }
+
+  #ScentHero-{{ section.id }} .scent-hero__btn--ghost {
+    background-color: transparent;
+    color: var(--sh-black);
+    border-color: var(--sh-border);
+  }
+
+  #ScentHero-{{ section.id }} .scent-hero__btn--ghost:hover {
+    background-color: var(--sh-grey);
+    border-color: var(--sh-black);
+  }
+
+  #ScentHero-{{ section.id }} .scent-hero__btn:focus-visible {
+    outline: 2px solid var(--sh-black);
+    outline-offset: 3px;
+  }
+
+  /* Entrance animation */
+  #ScentHero-{{ section.id }} .scent-hero__reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: scentHeroUp-{{ section.id }} 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  }
+
+  #ScentHero-{{ section.id }} .scent-hero__reveal--1 { animation-delay: 0.05s; }
+  #ScentHero-{{ section.id }} .scent-hero__reveal--2 { animation-delay: 0.15s; }
+  #ScentHero-{{ section.id }} .scent-hero__reveal--3 { animation-delay: 0.25s; }
+  #ScentHero-{{ section.id }} .scent-hero__reveal--4 { animation-delay: 0.35s; }
+
+  @keyframes scentHeroUp-{{ section.id }} {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #ScentHero-{{ section.id }} .scent-hero__reveal {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+    #ScentHero-{{ section.id }} .scent-hero__btn {
+      transition: none;
+    }
+  }
+
+  /* Tablet */
+  @media screen and (max-width: 1024px) {
+    #ScentHero-{{ section.id }} .scent-hero__overlay {
+      background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, {{ section.settings.overlay_opacity | divided_by: 100.0 }}) 0%,
+        rgba(255, 255, 255, {{ section.settings.overlay_opacity | times: 0.9 | divided_by: 100.0 }}) 48%,
+        rgba(255, 255, 255, 0.12) 100%
+      );
+    }
+  }
+
+  /* Mobile */
+  @media screen and (max-width: 749px) {
+    #ScentHero-{{ section.id }} {
+      align-items: flex-start;
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px;
+      min-height: {{ section.settings.height_mobile }}px;
+    }
+
+    #ScentHero-{{ section.id }} .scent-hero__img--desktop {
+      display: none;
+    }
+
+    #ScentHero-{{ section.id }} .scent-hero__img--mobile {
+      display: block;
+    }
+
+    #ScentHero-{{ section.id }} .scent-hero__overlay {
+      background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, {{ section.settings.overlay_opacity | divided_by: 100.0 }}) 0%,
+        rgba(255, 255, 255, {{ section.settings.overlay_opacity | times: 0.88 | divided_by: 100.0 }}) 42%,
+        rgba(255, 255, 255, 0.05) 100%
+      );
+    }
+
+    #ScentHero-{{ section.id }} .scent-hero__content {
+      max-width: 100%;
+      text-align: {{ section.settings.mobile_alignment }};
+    }
+
+    #ScentHero-{{ section.id }} .scent-hero__text {
+      max-width: 100%;
+      margin-top: 18px;
+    }
+
+    #ScentHero-{{ section.id }} .scent-hero__actions {
+      margin-top: 26px;
+      justify-content: {% if section.settings.mobile_alignment == 'center' %}center{% else %}flex-start{% endif %};
+    }
+
+    #ScentHero-{{ section.id }} .scent-hero__btn {
+      width: 100%;
+      max-width: 340px;
+    }
+  }
+{% endstyle %}
+
+<section
+  id="ScentHero-{{ section.id }}"
+  class="scent-hero"
+  {% if section.settings.heading != blank %}
+    aria-label="{{ section.settings.heading | strip_html | escape }}"
+  {% endif %}
+>
+  <div class="scent-hero__media">
+    {%- if bg != blank -%}
+      {{
+        bg
+        | image_url: width: 3200
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          sizes: '100vw',
+          widths: '750, 1100, 1500, 1900, 2400, 3000, 3200',
+          class: 'scent-hero__img scent-hero__img--desktop',
+          alt: alt_text
+      }}
+      {{
+        bg_mobile
+        | image_url: width: 1400
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          sizes: '100vw',
+          widths: '420, 600, 750, 900, 1200, 1400',
+          class: 'scent-hero__img scent-hero__img--mobile',
+          alt: ''
+      }}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'scent-hero__img scent-hero__img--desktop' }}
+    {%- endif -%}
+  </div>
+
+  <div class="scent-hero__overlay"></div>
+
+  <div class="container">
+    <div class="scent-hero__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="scent-hero__eyebrow scent-hero__reveal scent-hero__reveal--1">
+          {{ section.settings.eyebrow | escape }}
+        </p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <{{ heading_tag }} class="scent-hero__title scent-hero__reveal scent-hero__reveal--2">
+          {{- section.settings.heading | replace: '</p><p>', '<br>' | replace: '<p>', '' | replace: '</p>', '' -}}
+        </{{ heading_tag }}>
+      {%- endif -%}
+
+      {%- if section.settings.subheading != blank -%}
+        <div class="scent-hero__text scent-hero__reveal scent-hero__reveal--3">
+          {{ section.settings.subheading }}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank or section.settings.button_label_2 != blank -%}
+        <div class="scent-hero__actions scent-hero__reveal scent-hero__reveal--4">
+          {%- if section.settings.button_label != blank -%}
+            <a
+              class="scent-hero__btn"
+              href="{{ section.settings.button_link | default: '#' }}"
+            >
+              {{ section.settings.button_label | escape }}
+            </a>
+          {%- endif -%}
+
+          {%- if section.settings.button_label_2 != blank -%}
+            <a
+              class="scent-hero__btn scent-hero__btn--ghost"
+              href="{{ section.settings.button_link_2 | default: '#' }}"
+            >
+              {{ section.settings.button_label_2 | escape }}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Scent Hero",
+  "tag": "section",
+  "class": "scent-hero-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image (desktop)",
+      "info": "Use the wide product lineup image. Keep the bottles on the right side so the text stays clear."
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image (mobile)",
+      "info": "Optional. If empty, the desktop image is used."
+    },
+    {
+      "type": "select",
+      "id": "focal_desktop",
+      "label": "Desktop image position",
+      "options": [
+        { "value": "center center", "label": "Center" },
+        { "value": "right center", "label": "Right" },
+        { "value": "left center", "label": "Left" },
+        { "value": "center bottom", "label": "Bottom" }
+      ],
+      "default": "center center"
+    },
+    {
+      "type": "select",
+      "id": "focal_mobile",
+      "label": "Mobile image position",
+      "options": [
+        { "value": "center bottom", "label": "Bottom" },
+        { "value": "center center", "label": "Center" },
+        { "value": "right center", "label": "Right" }
+      ],
+      "default": "center bottom"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Text side scrim strength",
+      "default": 90
+    },
+    {
+      "type": "header",
+      "content": "Height and spacing"
+    },
+    {
+      "type": "select",
+      "id": "height_type",
+      "label": "Desktop height mode",
+      "options": [
+        { "value": "fixed", "label": "Fixed height (px)" },
+        { "value": "viewport", "label": "Viewport height (vh)" }
+      ],
+      "default": "fixed"
+    },
+    {
+      "type": "range",
+      "id": "height_px",
+      "min": 480,
+      "max": 920,
+      "step": 8,
+      "unit": "px",
+      "label": "Desktop height",
+      "default": 808
+    },
+    {
+      "type": "range",
+      "id": "height_vh",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Desktop viewport height",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "min": 380,
+      "max": 800,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile height",
+      "default": 580
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 60
+    },
+    {
+      "type": "select",
+      "id": "vertical_position",
+      "label": "Content vertical position",
+      "options": [
+        { "value": "center", "label": "Middle" },
+        { "value": "flex-start", "label": "Top" },
+        { "value": "flex-end", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "Sam's Fragrance Shop"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Find the Fragrance You Will Be Remembered For</p>"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 40,
+      "max": 88,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading max size",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 16,
+      "max": 34,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading max size",
+      "default": 26
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Get matched with scents designed to turn heads and earn compliments."
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 380,
+      "max": 760,
+      "step": 20,
+      "unit": "px",
+      "label": "Text column width",
+      "default": 560
+    },
+    {
+      "type": "select",
+      "id": "mobile_alignment",
+      "label": "Mobile text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Primary button label",
+      "default": "Take Scent Quiz"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "label": "Secondary button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Secondary button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Scent Hero",
+      "category": "Bytefied"
+    }
+  ]
+}
+{% endschema %}

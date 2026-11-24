@@ -1,0 +1,679 @@
+{%- liquid
+  assign scheme = section.settings.color_scheme
+-%}
+
+{% style %}
+  #Faq-{{ section.id }} {
+    --fq-black: #1c1a17;
+    --fq-white: #ffffff;
+    --fq-grey: #f5f5f4;
+    --fq-border: #e5e5e3;
+    --fq-muted: #6b6b68;
+    --fq-font: 'Geist', 'Geist Sans', 'GeistVF', -apple-system, system-ui, sans-serif;
+
+    {% if scheme == 'white' %}
+      --fq-bg: #ffffff;
+      --fq-hover: #f5f5f4;
+    {% else %}
+      --fq-bg: #f5f5f4;
+      --fq-hover: #ffffff;
+    {% endif %}
+
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--fq-bg);
+    color: var(--fq-black);
+    font-family: var(--fq-font);
+
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  #Faq-{{ section.id }},
+  #Faq-{{ section.id }} * {
+    font-family: var(--fq-font) !important;
+  }
+
+  #Faq-{{ section.id }} .container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* Head */
+  #Faq-{{ section.id }} .fq__head {
+    margin: 0 0 {{ section.settings.title_gap }}px;
+    text-align: {{ section.settings.title_alignment }};
+  }
+
+  #Faq-{{ section.id }} .fq__title {
+    margin: 0;
+    font-size: clamp(1.625rem, 3.2vw, {{ section.settings.title_size | divided_by: 16.0 }}rem);
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: var(--fq-black);
+  }
+
+  #Faq-{{ section.id }} .fq__subtitle {
+    margin: 14px 0 0;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--fq-muted);
+  }
+
+  #Faq-{{ section.id }} .fq__subtitle p {
+    margin: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  /* List */
+  #Faq-{{ section.id }} .fq__list {
+    max-width: {{ section.settings.list_width }}px;
+    width: 100%;
+    margin: 0 auto;
+    border-top: 1px solid var(--fq-border);
+  }
+
+  #Faq-{{ section.id }} .fq__item {
+    border-bottom: 1px solid var(--fq-border);
+  }
+
+  #Faq-{{ section.id }} .fq__q {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: {{ section.settings.row_padding }}px 4px;
+    margin: 0;
+    background: none;
+    border: 0;
+    border-radius: 3px;
+    text-align: left;
+    cursor: pointer;
+    color: var(--fq-black);
+    font-size: {{ section.settings.question_size }}px;
+    font-weight: 600;
+    line-height: 1.45;
+    letter-spacing: -0.005em;
+    transition: background-color 0.25s ease, padding-left 0.25s ease, opacity 0.25s ease;
+  }
+
+  #Faq-{{ section.id }} .fq__q:hover {
+    background-color: var(--fq-hover);
+    padding-left: 12px;
+  }
+
+  #Faq-{{ section.id }} .fq__q:focus-visible {
+    outline: 2px solid var(--fq-black);
+    outline-offset: -2px;
+  }
+
+  #Faq-{{ section.id }} .fq__icon {
+    position: relative;
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+  }
+
+  #Faq-{{ section.id }} .fq__icon::before,
+  #Faq-{{ section.id }} .fq__icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: currentColor;
+    transform: translate(-50%, -50%);
+    transition: transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.32s ease;
+  }
+
+  #Faq-{{ section.id }} .fq__icon::before {
+    width: 16px;
+    height: 1.6px;
+  }
+
+  #Faq-{{ section.id }} .fq__icon::after {
+    width: 1.6px;
+    height: 16px;
+  }
+
+  #Faq-{{ section.id }} .fq__item.is-open .fq__icon::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+    opacity: 0;
+  }
+
+  #Faq-{{ section.id }} .fq__item.is-open .fq__icon::before {
+    transform: translate(-50%, -50%) rotate(180deg);
+  }
+
+  /* Answer */
+  #Faq-{{ section.id }} .fq__a {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.38s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  #Faq-{{ section.id }} .fq__item.is-open .fq__a {
+    grid-template-rows: 1fr;
+  }
+
+  #Faq-{{ section.id }} .fq__a-inner {
+    overflow: hidden;
+  }
+
+  #Faq-{{ section.id }} .fq__a-text {
+    padding: 0 60px {{ section.settings.row_padding }}px 4px;
+    font-size: {{ section.settings.answer_size }}px;
+    line-height: 1.65;
+    color: var(--fq-muted);
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.3s ease 0.06s, transform 0.3s ease 0.06s;
+  }
+
+  #Faq-{{ section.id }} .fq__item.is-open .fq__a-text {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #Faq-{{ section.id }} .fq__a-text p {
+    margin: 0 0 12px;
+    color: inherit;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  #Faq-{{ section.id }} .fq__a-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  #Faq-{{ section.id }} .fq__a-text a {
+    color: var(--fq-black);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  #Faq-{{ section.id }} .fq__a-text ul,
+  #Faq-{{ section.id }} .fq__a-text ol {
+    margin: 0 0 12px;
+    padding-left: 20px;
+  }
+
+  #Faq-{{ section.id }} .fq__a-text li {
+    margin-bottom: 6px;
+  }
+
+  /* Foot */
+  #Faq-{{ section.id }} .fq__foot {
+    max-width: {{ section.settings.list_width }}px;
+    margin: 40px auto 0;
+    text-align: center;
+  }
+
+  #Faq-{{ section.id }} .fq__foot-text {
+    margin: 0 0 18px;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--fq-muted);
+  }
+
+  #Faq-{{ section.id }} .fq__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 54px;
+    padding: 0 34px;
+    border-radius: 2px;
+    border: 1px solid var(--fq-black);
+    background-color: var(--fq-black);
+    color: var(--fq-white);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background-color 0.28s ease, border-color 0.28s ease, transform 0.28s ease;
+  }
+
+  #Faq-{{ section.id }} .fq__btn:hover {
+    background-color: #3a3734;
+    border-color: #3a3734;
+    transform: translateY(-1px);
+  }
+
+  /* Animation feel */
+  #Faq-{{ section.id }} .fq__reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s cubic-bezier(0.22, 0.61, 0.36, 1),
+                transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  #Faq-{{ section.id }}.is-visible .fq__reveal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #Faq-{{ section.id }}.is-visible .fq__item:nth-child(1) { transition-delay: 0.04s; }
+  #Faq-{{ section.id }}.is-visible .fq__item:nth-child(2) { transition-delay: 0.08s; }
+  #Faq-{{ section.id }}.is-visible .fq__item:nth-child(3) { transition-delay: 0.12s; }
+  #Faq-{{ section.id }}.is-visible .fq__item:nth-child(4) { transition-delay: 0.16s; }
+  #Faq-{{ section.id }}.is-visible .fq__item:nth-child(5) { transition-delay: 0.2s; }
+  #Faq-{{ section.id }}.is-visible .fq__item:nth-child(6) { transition-delay: 0.24s; }
+  #Faq-{{ section.id }}.is-visible .fq__item:nth-child(7) { transition-delay: 0.28s; }
+  #Faq-{{ section.id }}.is-visible .fq__item:nth-child(8) { transition-delay: 0.32s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #Faq-{{ section.id }} .fq__reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    #Faq-{{ section.id }} .fq__a,
+    #Faq-{{ section.id }} .fq__a-text,
+    #Faq-{{ section.id }} .fq__q {
+      transition: none;
+    }
+  }
+
+  /* Mobile */
+  @media screen and (max-width: 749px) {
+    #Faq-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round }}px;
+    }
+
+    #Faq-{{ section.id }} .fq__q {
+      gap: 16px;
+      padding: {{ section.settings.row_padding | times: 0.8 | round }}px 2px;
+      font-size: max(14px, {{ section.settings.question_size | times: 0.92 | round }}px);
+    }
+
+    #Faq-{{ section.id }} .fq__q:hover {
+      padding-left: 2px;
+      background: none;
+    }
+
+    #Faq-{{ section.id }} .fq__a-text {
+      padding: 0 8px {{ section.settings.row_padding | times: 0.8 | round }}px 2px;
+      font-size: max(14px, {{ section.settings.answer_size | times: 0.94 | round }}px);
+    }
+
+    #Faq-{{ section.id }} .fq__foot {
+      margin-top: 32px;
+    }
+
+    #Faq-{{ section.id }} .fq__btn {
+      width: 100%;
+      max-width: 340px;
+    }
+  }
+{% endstyle %}
+
+<section id="Faq-{{ section.id }}" class="bytefied-faq">
+  <div class="container">
+    {%- if section.settings.title != blank or section.settings.subtitle != blank -%}
+      <div class="fq__head fq__reveal">
+        {%- if section.settings.title != blank -%}
+          <h2 class="fq__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subtitle != blank -%}
+          <div class="fq__subtitle">{{ section.settings.subtitle }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="fq__list" data-fq-list>
+      {%- for block in section.blocks -%}
+        {%- assign is_open = false -%}
+        {%- if section.settings.open_first and forloop.first -%}
+          {%- assign is_open = true -%}
+        {%- endif -%}
+
+        <div
+          class="fq__item fq__reveal{% if is_open %} is-open{% endif %}"
+          data-fq-item
+          {{ block.shopify_attributes }}
+        >
+          <h3 style="margin:0;">
+            <button
+              type="button"
+              class="fq__q"
+              data-fq-toggle
+              id="FaqQ-{{ section.id }}-{{ block.id }}"
+              aria-expanded="{% if is_open %}true{% else %}false{% endif %}"
+              aria-controls="FaqA-{{ section.id }}-{{ block.id }}"
+            >
+              <span>{{ block.settings.question }}</span>
+              <span class="fq__icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+
+          <div
+            class="fq__a"
+            id="FaqA-{{ section.id }}-{{ block.id }}"
+            role="region"
+            aria-labelledby="FaqQ-{{ section.id }}-{{ block.id }}"
+          >
+            <div class="fq__a-inner">
+              <div class="fq__a-text">{{ block.settings.answer }}</div>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.foot_text != blank or section.settings.button_label != blank -%}
+      <div class="fq__foot fq__reveal">
+        {%- if section.settings.foot_text != blank -%}
+          <p class="fq__foot-text">{{ section.settings.foot_text | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.button_label != blank -%}
+          <a class="fq__btn" href="{{ section.settings.button_link | default: '#' }}">
+            {{ section.settings.button_label | escape }}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('Faq-{{ section.id }}');
+    if (!root) return;
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      io.observe(root);
+    } else {
+      root.classList.add('is-visible');
+    }
+
+    var closeOthers = {{ section.settings.close_others | json }};
+    var items = root.querySelectorAll('[data-fq-item]');
+
+    items.forEach(function (item) {
+      var btn = item.querySelector('[data-fq-toggle]');
+      if (!btn) return;
+
+      btn.addEventListener('click', function () {
+        var open = item.classList.contains('is-open');
+
+        if (closeOthers && !open) {
+          items.forEach(function (other) {
+            if (other === item) return;
+            other.classList.remove('is-open');
+            var otherBtn = other.querySelector('[data-fq-toggle]');
+            if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+          });
+        }
+
+        item.classList.toggle('is-open', !open);
+        btn.setAttribute('aria-expanded', String(!open));
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "tag": "section",
+  "class": "bytefied-faq-section",
+  "max_blocks": 20,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Title",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "richtext",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "select",
+      "id": "title_alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "label": "Title max size",
+      "default": 38
+    },
+    {
+      "type": "range",
+      "id": "title_gap",
+      "min": 16,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Space under the title",
+      "default": 56
+    },
+    {
+      "type": "header",
+      "content": "List"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Section background",
+      "options": [
+        { "value": "grey", "label": "Light grey" },
+        { "value": "white", "label": "White" }
+      ],
+      "default": "grey"
+    },
+    {
+      "type": "range",
+      "id": "list_width",
+      "min": 640,
+      "max": 1200,
+      "step": 20,
+      "unit": "px",
+      "label": "List width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "question_size",
+      "min": 13,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Question size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "answer_size",
+      "min": 13,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Answer size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "row_padding",
+      "min": 12,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Row padding",
+      "default": 20
+    },
+    {
+      "type": "checkbox",
+      "id": "open_first",
+      "label": "Open the first question by default",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "close_others",
+      "label": "Close other answers when one opens",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Bottom note"
+    },
+    {
+      "type": "text",
+      "id": "foot_text",
+      "label": "Note above the button",
+      "default": "Still have a question about a scent or your order"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Contact Us"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 20,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 20,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Are your fragrances authentic?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Yes. Every bottle we sell is sourced from authorized distributors and checked by batch code before it ships.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "category": "Bytefied",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Are your fragrances authentic?",
+            "answer": "<p>Yes. Every bottle is sourced from authorized distributors and verified by batch code before it leaves our shelf. If you ever want the batch details for an order, message us and we will send them over.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Why are your prices lower than retail?",
+            "answer": "<p>We buy at wholesale and keep our margins thin instead of paying for department store counters and heavy advertising. Same bottle, same juice, smaller price tag.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "<p>Orders leave our shop within two business days and most parcels land in two to four days after that. Orders over $125 ship free and every order comes with tracking.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What exactly is a sample or decant?",
+            "answer": "<p>It is a small spray vial filled from the original bottle, so you get the real fragrance in a size you can carry and test for a week. Samples start at $6.99 and it is the cheapest way to find out if a scent suits you.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "I am new to fragrances. Where should I start?",
+            "answer": "<p>Pick three or four samples across different families, something fresh, something sweet and something woody. Wear each one for a full day and see which one people mention. Then come back for the full bottle of the winner.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Will the fragrance last all day?",
+            "answer": "<p>That depends on the concentration and your skin. An Eau de Parfum or Extrait usually carries six to ten hours, an Eau de Toilette lasts less. Spray on moisturized skin at the pulse points and it will hold much longer.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Can I track my order?",
+            "answer": "<p>Yes. A tracking link goes to your email as soon as the label is created. If it has not arrived, check your spam folder and then message us and we will resend it.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What if the scent is not for me?",
+            "answer": "<p>Reach out and we will walk you through the options in our refund policy. This is also the reason we push samples first, so you spend a few dollars finding out rather than the price of a full bottle.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
